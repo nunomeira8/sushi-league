@@ -55,13 +55,11 @@ This project was created to:
 
 ## Future Improvements
 
-- Authentication
-- Public leaderboards
-- Player avatars
-- Match statistics
-- QR code room sharing
-- PWA support
-- Sound effects & animations
+- Room creation
+-  QR code room sharing
+- Sushi Counter
+- Extra-time
+- Match awards
 
 ---
 
