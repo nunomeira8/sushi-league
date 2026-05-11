@@ -1,39 +1,45 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { RoomForm } from '@/components/forms/RoomForm'
+import { RoomForm } from "@/components/forms/RoomForm";
 
-import { generateRoomCode } from '@/lib/generateRoomCode'
-import { supabase } from '@/lib/supabase'
+import { generateRoomCode } from "@/lib/generateRoomCode";
+import { supabase } from "@/lib/supabase";
+import { savePlayerId } from "@/lib/storage";
 
 export default function CreatePage() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [username, setUsername] =
-    useState('')
+  const [username, setUsername] = useState("");
 
   async function handleCreateRoom() {
-    const roomCode = generateRoomCode()
+    const roomCode = generateRoomCode();
 
     const { data: room } = await supabase
-      .from('rooms')
+      .from("rooms")
       .insert({
         code: roomCode,
         name: `${username}'s room`,
         duration: 60,
       })
       .select()
-      .single()
+      .single();
 
-    await supabase.from('players').insert({
-      room_id: room.id,
-      name: username,
-      is_admin: true,
-    })
+    const { data: player } = await supabase
+      .from("players")
+      .insert({
+        room_id: room.id,
+        name: username,
+        is_admin: true,
+      })
+      .select()
+      .single();
 
-    router.push(`/room/${roomCode}`)
+    savePlayerId(player.id);
+
+    router.push(`/room/${roomCode}`);
   }
 
   return (
@@ -50,5 +56,5 @@ export default function CreatePage() {
         onSubmit={handleCreateRoom}
       />
     </main>
-  )
+  );
 }

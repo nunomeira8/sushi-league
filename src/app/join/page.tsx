@@ -1,58 +1,61 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { RoomForm } from '@/components/forms/RoomForm'
+import { RoomForm } from "@/components/forms/RoomForm";
 
-import { supabase } from '@/lib/supabase'
+import { supabase } from "@/lib/supabase";
+import { savePlayerId } from "@/lib/storage";
 
 export default function JoinPage() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [roomCode, setRoomCode] =
-    useState('')
+  const [roomCode, setRoomCode] = useState("");
 
-  const [username, setUsername] =
-    useState('')
+  const [username, setUsername] = useState("");
 
-  const [error, setError] =
-    useState('')
+  const [error, setError] = useState("");
 
   async function handleJoinRoom() {
-    setError('')
+    setError("");
 
     const { data: room } = await supabase
-      .from('rooms')
-      .select('*')
-      .eq('code', roomCode.toUpperCase())
-      .single()
+      .from("rooms")
+      .select("*")
+      .eq("code", roomCode.toUpperCase())
+      .single();
 
     if (!room) {
-      setError('Room not found')
-      return
+      setError("Room not found");
+      return;
     }
 
-    const { data: existingPlayer } =
-      await supabase
-        .from('players')
-        .select('*')
-        .eq('room_id', room.id)
-        .eq('name', username)
-        .single()
+    const { data: existingPlayer } = await supabase
+      .from("players")
+      .select("*")
+      .eq("room_id", room.id)
+      .eq("name", username)
+      .single();
 
     if (existingPlayer) {
-      setError('Username already taken')
-      return
+      setError("Username already taken");
+      return;
     }
 
-    await supabase.from('players').insert({
-      room_id: room.id,
-      name: username,
-      is_admin: false,
-    })
+    const { data: player } = await supabase
+      .from("players")
+      .insert({
+        room_id: room.id,
+        name: username,
+        is_admin: false,
+      })
+      .select()
+      .single();
 
-    router.push(`/room/${room.code}`)
+    savePlayerId(player.id);
+
+    router.push(`/room/${room.code}`);
   }
 
   return (
@@ -71,5 +74,5 @@ export default function JoinPage() {
         error={error}
       />
     </main>
-  )
+  );
 }
