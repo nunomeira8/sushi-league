@@ -1,85 +1,107 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from 'react'
 
-import { useParams } from "next/navigation";
+import { useParams } from 'next/navigation'
 
-import { supabase } from "@/lib/supabase";
+import { supabase } from '@/lib/supabase'
 
-type Player = {
-  id: string;
-  name: string;
-  is_admin: boolean;
-};
+import {
+  getPlayerId,
+  removePlayerId,
+} from '@/lib/storage'
 
-type Room = {
-  id: string;
-  code: string;
-};
+import { Player } from '@/types/player'
+import { Room } from '@/types/room'
 
 export default function RoomPage() {
-  const params = useParams();
+  const params = useParams()
 
-  const code = params.code as string;
+  const code = params.code as string
 
-  const [room, setRoom] = useState<Room | null>(null);
+  const [room, setRoom] =
+    useState<Room | null>(null)
 
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] =
+    useState<Player[]>([])
+
+  const [currentPlayer, setCurrentPlayer] =
+    useState<Player | null>(null)
 
   async function fetchRoomData() {
     const { data: roomData } = await supabase
-      .from("rooms")
-      .select("*")
-      .eq("code", code.toUpperCase())
-      .single();
+      .from('rooms')
+      .select('*')
+      .eq('code', code.toUpperCase())
+      .single()
 
-    if (!roomData) return;
+    if (!roomData) return
 
-    setRoom(roomData);
+    setRoom(roomData)
 
-    const { data: playersData } = await supabase
-      .from("players")
-      .select("*")
-      .eq("room_id", roomData.id);
+    const { data: playersData } =
+      await supabase
+        .from('players')
+        .select('*')
+        .eq('room_id', roomData.id)
 
-    setPlayers(playersData || []);
+    if (!playersData) return
+
+    setPlayers(playersData)
+
+    const playerId = getPlayerId()
+
+    const me = playersData.find(
+      (player) => player.id === playerId
+    )
+
+    if (me) {
+      setCurrentPlayer(me)
+    }
   }
 
   useEffect(() => {
-    let mounted = true;
+    fetchRoomData()
 
-    async function initializeRoom() {
-      if (!mounted) return;
-
-      await fetchRoomData();
-    }
-
-    initializeRoom();
-
-    const interval = setInterval(() => {
-      initializeRoom();
-    }, 3000);
+    const channel = supabase
+      .channel('room-players')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'players',
+        },
+        () => {
+          fetchRoomData()
+        }
+      )
+      .subscribe()
 
     return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, []);
+      supabase.removeChannel(channel)
+    }
+  }, [])
 
   if (!room) {
-    return null;
+    return null
   }
-
-  const admin = players.find((player) => player.is_admin);
 
   return (
     <main className="min-h-screen bg-[#FAF7F2] px-6 py-8">
       <div className="mx-auto max-w-md">
         <div className="rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
           <div className="mb-6">
-            <p className="text-sm text-gray-500">Room Code</p>
+            <p className="text-sm text-gray-500">
+              Room Code
+            </p>
 
-            <h1 className="text-4xl font-bold text-[#FF7F5C]">{room.code}</h1>
+            <h1 className="text-4xl font-bold text-[#FF7F5C]">
+              {room.code}
+            </h1>
           </div>
 
           <div>
@@ -100,17 +122,30 @@ export default function RoomPage() {
                     p-4
                   "
                 >
-                  <span className="text-[#222222]">{player.name}</span>
+                  <div className="flex flex-col">
+                    <span className="text-[#222222]">
+                      {player.name}
+                    </span>
+
+                    {player.id ===
+                      currentPlayer?.id && (
+                      <span className="text-xs text-gray-400">
+                        You
+                      </span>
+                    )}
+                  </div>
 
                   {player.is_admin && (
-                    <span className="text-sm text-[#FF7F5C]">Admin</span>
+                    <span className="text-sm text-[#FF7F5C]">
+                      Admin
+                    </span>
                   )}
                 </div>
               ))}
             </div>
           </div>
 
-          {admin && (
+          {currentPlayer?.is_admin && (
             <button
               className="
                 mt-6
@@ -129,5 +164,5 @@ export default function RoomPage() {
         </div>
       </div>
     </main>
-  );
+  )
 }
