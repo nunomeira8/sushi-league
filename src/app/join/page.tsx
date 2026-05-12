@@ -8,8 +8,13 @@ import { RoomForm } from "@/components/forms/RoomForm";
 import { supabase } from "@/lib/supabase";
 import { savePlayerId } from "@/lib/storage";
 
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+
 export default function JoinPage() {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
 
   const [roomCode, setRoomCode] = useState("");
 
@@ -58,11 +63,20 @@ export default function JoinPage() {
     router.push(`/room/${room.code}`);
   }
 
+  useEffect(() => {
+    const roomFromUrl = searchParams.get("room");
+
+    if (roomFromUrl) {
+      setRoomCode(roomFromUrl);
+    }
+  }, [searchParams]);
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FAF7F2] px-6">
       <RoomForm
         title="Join Room"
         showRoomCode
+        isRoomCodeLocked={!!searchParams.get("room")}
         usernamePlaceholder="Username"
         roomCodePlaceholder="Room code"
         continueText="Continue"

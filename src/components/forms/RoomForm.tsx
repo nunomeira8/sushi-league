@@ -3,6 +3,7 @@
 type Props = {
   title: string;
   showRoomCode?: boolean;
+  isRoomCodeLocked?: boolean;
   usernamePlaceholder: string;
   roomCodePlaceholder: string;
   continueText: string;
@@ -20,6 +21,7 @@ type Props = {
 export function RoomForm({
   title,
   showRoomCode = false,
+  isRoomCodeLocked = false,
   usernamePlaceholder,
   roomCodePlaceholder,
   continueText,
@@ -38,21 +40,40 @@ export function RoomForm({
 
       <div className="flex flex-col gap-4">
         {showRoomCode && (
-          <input
-            value={roomCode}
-            onChange={(e) => onRoomCodeChange(e.target.value)}
-            placeholder={roomCodePlaceholder}
-            className="
-    rounded-2xl
-    border
-    border-gray-200
-    bg-white
-    p-4
-    text-[#222222]
-    placeholder:text-gray-400
-    outline-none
-  "
-          />
+          <>
+            {isRoomCodeLocked ? (
+              <div
+                className="
+          rounded-2xl
+          bg-[#FAF7F2]
+          p-4
+          text-center
+        "
+              >
+                <p className="text-sm text-gray-500">{roomCodePlaceholder}</p>
+
+                <h2 className="mt-1 text-3xl font-bold text-[#FF7F5C]">
+                  {roomCode}
+                </h2>
+              </div>
+            ) : (
+              <input
+                value={roomCode}
+                onChange={(e) => onRoomCodeChange(e.target.value)}
+                placeholder={roomCodePlaceholder}
+                className="
+          rounded-2xl
+          border
+          border-gray-200
+          bg-white
+          p-4
+          text-[#222222]
+          placeholder:text-gray-400
+          outline-none
+        "
+              />
+            )}
+          </>
         )}
 
         <input
