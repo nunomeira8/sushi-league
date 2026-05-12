@@ -15,6 +15,10 @@ export const translations = {
     continue: 'Continue',
     roomNotFound: 'Room not found',
     usernameTaken: 'Username already taken',
+    kicked: 'You were removed from the room',
+    notAllowed: 'Not allowed to join this room',
+    admin: 'Admin',
+    you: 'You',
   },
 
   pt: {
@@ -31,6 +35,10 @@ export const translations = {
     continue: 'Continuar',
     roomNotFound: 'Sala não encontrada',
     usernameTaken: 'Nome já está em uso',
+    kicked: 'Foste removido da sala',
+    notAllowed: 'Não tens permissão para entrar nesta sala',
+    admin: 'Admin',
+    you: 'Tu',
   },
 
   fr: {
@@ -47,5 +55,9 @@ export const translations = {
     continue: 'Continuer',
     roomNotFound: 'Salle introuvable',
     usernameTaken: 'Nom déjà utilisé',
+    kicked: 'Vous avez été exclu de la salle',
+    notAllowed: "Vous n'êtes pas autorisé à rejoindre cette salle",
+    admin: 'Admin',
+    you: 'Vous',
   },
 } satisfies Record<Language, Record<string, string>>
