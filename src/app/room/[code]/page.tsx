@@ -2,19 +2,24 @@
 
 import { useEffect, useState } from "react";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { supabase } from "@/lib/supabase";
 
+import { translations } from "@/i18n/translations";
 import { getPlayerId, removePlayerId } from "@/lib/storage";
 
 import { Player } from "@/types/player";
 import { Room } from "@/types/room";
 import { QrCodeModal } from "../QrCodeModal";
-import { QrCode } from "lucide-react";
+import { QrCode, Trash2 } from "lucide-react";
 
 export default function RoomPage() {
   const params = useParams();
+  const router = useRouter();
+
+  const language = "en";
+  const t = translations[language];
 
   const code = params.code as string;
 
@@ -78,8 +83,35 @@ export default function RoomPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!currentPlayer) return;
+
+    const stillExists = players.find(
+      (player) => player.id === currentPlayer.id,
+    );
+
+    if (!stillExists) {
+      removePlayerId();
+
+      alert(t.kicked);
+
+      router.push("/");
+    }
+  }, [players]);
+
   if (!room) {
     return null;
+  }
+
+  async function kickPlayer(player: Player) {
+    if (!room) return;
+
+    await supabase.from("room_blocklist").insert({
+      room_id: room.id,
+      player_name: player.name,
+    });
+
+    await supabase.from("players").delete().eq("id", player.id);
   }
 
   return (
@@ -136,13 +168,32 @@ export default function RoomPage() {
                     <span className="text-[#222222]">{player.name}</span>
 
                     {player.id === currentPlayer?.id && (
-                      <span className="text-xs text-gray-400">You</span>
+                      <span className="text-xs text-gray-400">{t.you}</span>
                     )}
                   </div>
 
-                  {player.is_admin && (
-                    <span className="text-sm text-[#FF7F5C]">Admin</span>
-                  )}
+                  <div className="flex items-center gap-3">
+                    {player.is_admin && (
+                      <span className="text-sm text-[#FF7F5C]">{t.admin}</span>
+                    )}
+
+                    {currentPlayer?.is_admin &&
+                      player.id !== currentPlayer.id && (
+                        <button
+                          onClick={() => kickPlayer(player)}
+                          className="
+          rounded-xl
+          bg-red-50
+          p-2
+          text-red-500
+          transition
+          active:scale-95
+        "
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      )}
+                  </div>
                 </div>
               ))}
             </div>

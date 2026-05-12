@@ -36,6 +36,18 @@ export default function JoinPage() {
       return;
     }
 
+    const { data: blockedPlayer } = await supabase
+      .from("room_blocklist")
+      .select("*")
+      .eq("room_id", room.id)
+      .eq("player_name", username)
+      .single();
+
+    if (blockedPlayer) {
+      setError("Not allowed to join this room");
+      return;
+    }
+
     const { data: existingPlayer } = await supabase
       .from("players")
       .select("*")
