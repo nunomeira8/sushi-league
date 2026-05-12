@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { RoomForm } from "@/components/forms/RoomForm";
+import { RoomForm } from '@/components/forms/RoomForm';
 
-import { generateRoomCode } from "@/lib/generateRoomCode";
-import { supabase } from "@/lib/supabase";
-import { savePlayerId } from "@/lib/storage";
+import { generateRoomCode } from '@/lib/generateRoomCode';
+import { supabase } from '@/lib/supabase';
+import { savePlayerId } from '@/lib/storage';
 
 export default function CreatePage() {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
 
   async function handleCreateRoom() {
     const roomCode = generateRoomCode();
 
     const { data: room } = await supabase
-      .from("rooms")
+      .from('rooms')
       .insert({
         code: roomCode,
         name: `${username}'s room`,
@@ -28,7 +28,7 @@ export default function CreatePage() {
       .single();
 
     const { data: player } = await supabase
-      .from("players")
+      .from('players')
       .insert({
         room_id: room.id,
         name: username,
@@ -52,7 +52,7 @@ export default function CreatePage() {
         username={username}
         roomCode=""
         onUsernameChange={setUsername}
-        onRoomCodeChange={() => {}}
+        onRoomCodeChange={() => { }}
         onSubmit={handleCreateRoom}
       />
     </main>

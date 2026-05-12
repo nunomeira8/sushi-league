@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from 'next/navigation';
 
-import { supabase } from "@/lib/supabase";
+import { supabase } from '@/lib/supabase';
 
 import { translations } from "@/i18n/translations";
 import { getPlayerId, removePlayerId } from "@/lib/storage";
 
-import { Player } from "@/types/player";
-import { Room } from "@/types/room";
-import { QrCodeModal } from "../QrCodeModal";
-import { QrCode, Trash2 } from "lucide-react";
+import { Player } from '@/types/player';
+import { Room } from '@/types/room';
+import { QrCodeModal } from '../QrCodeModal';
+import { QrCode, Trash2 } from 'lucide-react';
 
 export default function RoomPage() {
   const params = useParams();
@@ -32,20 +32,13 @@ export default function RoomPage() {
   const [isQrOpen, setIsQrOpen] = useState(false);
 
   async function fetchRoomData() {
-    const { data: roomData } = await supabase
-      .from("rooms")
-      .select("*")
-      .eq("code", code.toUpperCase())
-      .single();
+    const { data: roomData } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
     if (!roomData) return;
 
     setRoom(roomData);
 
-    const { data: playersData } = await supabase
-      .from("players")
-      .select("*")
-      .eq("room_id", roomData.id);
+    const { data: playersData } = await supabase.from('players').select('*').eq('room_id', roomData.id);
 
     if (!playersData) return;
 
@@ -64,13 +57,13 @@ export default function RoomPage() {
     fetchRoomData();
 
     const channel = supabase
-      .channel("room-players")
+      .channel('room-players')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "players",
+          event: '*',
+          schema: 'public',
+          table: 'players',
         },
         () => {
           fetchRoomData();
@@ -128,18 +121,7 @@ export default function RoomPage() {
             {currentPlayer?.is_admin && (
               <button
                 onClick={() => setIsQrOpen(true)}
-                className="
-  rounded-2xl
-  border
-  border-gray-200
-  bg-[#F3F1EC]
-  p-3
-  text-[#222222]
-  shadow-sm
-  transition
-  hover:scale-105
-  active:scale-95
-      "
+                className="rounded-2xl border border-gray-200 bg-[#F3F1EC] p-3 text-[#222222] shadow-sm transition hover:scale-105 active:scale-95"
               >
                 <QrCode size={26} strokeWidth={2.5} />
               </button>
@@ -147,23 +129,11 @@ export default function RoomPage() {
           </div>
 
           <div>
-            <h2 className="mb-3 text-xl font-semibold text-[#222222]">
-              Players
-            </h2>
+            <h2 className="mb-3 text-xl font-semibold text-[#222222]">Players</h2>
 
             <div className="flex flex-col gap-3">
               {players.map((player) => (
-                <div
-                  key={player.id}
-                  className="
-                    flex
-                    items-center
-                    justify-between
-                    rounded-2xl
-                    bg-[#FAF7F2]
-                    p-4
-                  "
-                >
+                <div key={player.id} className="flex items-center justify-between rounded-2xl bg-[#FAF7F2] p-4">
                   <div className="flex flex-col">
                     <span className="text-[#222222]">{player.name}</span>
 
@@ -200,28 +170,13 @@ export default function RoomPage() {
           </div>
 
           {currentPlayer?.is_admin && (
-            <button
-              className="
-                mt-6
-                w-full
-                rounded-2xl
-                bg-[#FF7F5C]
-                py-4
-                text-lg
-                font-semibold
-                text-white
-              "
-            >
+            <button className="mt-6 w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white">
               Start
             </button>
           )}
         </div>
       </div>
-      <QrCodeModal
-        roomCode={room.code}
-        isOpen={isQrOpen}
-        onClose={() => setIsQrOpen(false)}
-      />
+      <QrCodeModal roomCode={room.code} isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} />
     </main>
   );
 }
