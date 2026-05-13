@@ -19,6 +19,9 @@ export const translations = {
     notAllowed: 'Not allowed to join this room',
     admin: 'Admin',
     you: 'You',
+    ready: 'Ready',
+    notReady: 'Not Ready',
+    waitingPlayers: 'Waiting for players...',
   },
 
   pt: {
@@ -39,6 +42,9 @@ export const translations = {
     notAllowed: 'Não tens permissão para entrar nesta sala',
     admin: 'Admin',
     you: 'Tu',
+    ready: 'Pronto',
+    notReady: 'Não Pronto',
+    waitingPlayers: 'À espera dos jogadores...',
   },
 
   fr: {
@@ -59,5 +65,8 @@ export const translations = {
     notAllowed: "Vous n'êtes pas autorisé à rejoindre cette salle",
     admin: 'Admin',
     you: 'Vous',
+    ready: 'Prêt',
+    notReady: 'Pas Prêt',
+    waitingPlayers: 'En attente des joueurs...',
   },
 } satisfies Record<Language, Record<string, string>>

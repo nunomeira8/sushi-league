@@ -2,5 +2,6 @@ export type Player = {
   id: string
   room_id: string
   name: string
-  is_admin: boolean
+  is_admin: boolean,
+  is_ready: boolean
 }
