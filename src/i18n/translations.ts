@@ -22,6 +22,25 @@ export const translations = {
     ready: 'Ready',
     notReady: 'Not Ready',
     waitingPlayers: 'Waiting for players...',
+    settings: 'Settings',
+    save: 'Save',
+    gameDuration: 'Game Duration',
+    minutes: 'minutes',
+    starters: 'Starters',
+    startersDescription:
+      'Crepes, tempura or more',
+    sushi: 'Sushi',
+    sushiDescription:
+      'Any sushi piece',
+    sashimi: 'Sashimi',
+    sashimiDescription:
+      'Any type of sashimi',
+    temaki: 'Temaki',
+    temakiDescription:
+      'Any type of temaki',
+    hot_dishes: 'Hot Dishes',
+    hot_dishesDescription:
+      'Noodles, rice or others',
   },
 
   pt: {
@@ -45,6 +64,25 @@ export const translations = {
     ready: 'Pronto',
     notReady: 'Não Pronto',
     waitingPlayers: 'À espera dos jogadores...',
+    settings: 'Definições',
+    save: 'Guardar',
+    gameDuration: 'Duração do Jogo',
+    minutes: 'minutos',
+    starters: 'Entradas',
+    startersDescription:
+      'Crepes, tempura e mais',
+    sushi: 'Sushi',
+    sushiDescription:
+      'Qualquer peça de sushi',
+    sashimi: 'Sashimi',
+    sashimiDescription:
+      'Qualquer tipo de sashimi',
+    temaki: 'Temaki',
+    temakiDescription:
+      'Qualquer tipo de temaki',
+    hot_dishes: 'Pratos Quentes',
+    hot_dishesDescription:
+      'Noodles, arroz ou outros',
   },
 
   fr: {
@@ -68,5 +106,24 @@ export const translations = {
     ready: 'Prêt',
     notReady: 'Pas Prêt',
     waitingPlayers: 'En attente des joueurs...',
+    settings: 'Paramètres',
+    save: 'Sauvegarder',
+    gameDuration: 'Durée du Jeu',
+    minutes: 'minutes',
+    starters: 'Entrées',
+    startersDescription:
+      'Crêpes, tempura et plus',
+    sushi: 'Sushi',
+    sushiDescription:
+      'Toutes les pièces de sushi',
+    sashimi: 'Sashimi',
+    sashimiDescription:
+      'Tout type de sashimi',
+    temaki: 'Temaki',
+    temakiDescription:
+      'Tout type de temaki',
+    hot_dishes: 'Plats Chauds',
+    hot_dishesDescription:
+      'Nouilles, riz et plats chauds',
   },
 } satisfies Record<Language, Record<string, string>>
