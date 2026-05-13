@@ -1,5 +1,7 @@
 'use client';
 
+import { Settings } from 'lucide-react';
+
 import { useEffect, useState } from 'react';
 
 import { useParams, useRouter } from 'next/navigation';
@@ -16,6 +18,7 @@ import { Player } from '@/types/player';
 import { Room } from '@/types/room';
 
 import { QrCodeModal } from '../QrCodeModal';
+import { SettingsModal } from '../SettingsModal';
 
 export default function RoomPage() {
   const params = useParams();
@@ -36,12 +39,24 @@ export default function RoomPage() {
 
   const [isQrOpen, setIsQrOpen] = useState(false);
 
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const [gameDuration, setGameDuration] = useState(60);
+
+  const [enabledCategories, setEnabledCategories] = useState<string[]>([]);
+
+  const [settingsError, setSettingsError] = useState('');
+
   async function fetchRoomData() {
     const { data: roomData } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
     if (!roomData) return;
 
     setRoom(roomData);
+
+    setGameDuration(roomData.game_duration);
+
+    setEnabledCategories(roomData.enabled_categories);
 
     const { data: playersData } = await supabase
       .from('players')
@@ -123,6 +138,41 @@ export default function RoomPage() {
       .eq('id', currentPlayer.id);
   }
 
+  function toggleCategory(category: string) {
+    setSettingsError('');
+
+    if (enabledCategories.includes(category)) {
+      setEnabledCategories(enabledCategories.filter((item) => item !== category));
+
+      return;
+    }
+
+    setEnabledCategories([...enabledCategories, category]);
+  }
+
+  async function saveSettings() {
+    if (!room) return;
+
+    if (enabledCategories.length === 0) {
+      setSettingsError('Select at least one category');
+
+      return;
+    }
+
+    setSettingsError('');
+
+    await supabase
+      .from('rooms')
+      .update({
+        game_duration: gameDuration,
+
+        enabled_categories: enabledCategories,
+      })
+      .eq('id', room.id);
+
+    setIsSettingsOpen(false);
+  }
+
   if (!room) {
     return null;
   }
@@ -199,6 +249,17 @@ export default function RoomPage() {
               </button>
             )}
 
+            {currentPlayer?.is_admin && (
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="mt-3 mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white py-4 text-lg font-semibold text-[#222222] shadow-sm transition active:scale-95"
+              >
+                <Settings size={20} />
+
+                {t.settings}
+              </button>
+            )}
+
             {allPlayersReady && currentPlayer?.is_admin && (
               <button className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95">
                 Start
@@ -209,6 +270,18 @@ export default function RoomPage() {
       </div>
 
       <QrCodeModal roomCode={room.code} isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} />
+
+      <SettingsModal
+        language={language as 'en' | 'pt' | 'fr'}
+        isOpen={isSettingsOpen}
+        duration={gameDuration}
+        categories={enabledCategories}
+        onClose={() => setIsSettingsOpen(false)}
+        onDurationChange={setGameDuration}
+        onToggleCategory={toggleCategory}
+        onSave={saveSettings}
+        error={settingsError}
+      />
     </main>
   );
 }
