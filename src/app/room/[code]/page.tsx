@@ -84,6 +84,7 @@ export default function RoomPage() {
 
     const channel = supabase
       .channel(`room-${code}`)
+
       .on(
         'postgres_changes',
         {
@@ -95,6 +96,23 @@ export default function RoomPage() {
           await fetchRoomData();
         },
       )
+
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'rooms',
+        },
+        async (payload) => {
+          const updatedRoom = payload.new as Room;
+
+          if (updatedRoom.code === code.toUpperCase() && updatedRoom.is_started) {
+            router.push(`/room/${code}/game`);
+          }
+        },
+      )
+
       .subscribe();
 
     return () => {
@@ -179,6 +197,27 @@ export default function RoomPage() {
 
   const allPlayersReady = players.length > 0 && players.every((player) => player.is_ready);
 
+  async function startGame() {
+    if (!room) return;
+
+    const startedAt = new Date();
+
+    const endedAt = new Date(startedAt.getTime() + room.game_duration * 60 * 1000);
+
+    await supabase
+      .from('rooms')
+      .update({
+        is_started: true,
+
+        started_at: startedAt.toISOString(),
+
+        ended_at: endedAt.toISOString(),
+      })
+      .eq('id', room.id);
+
+    router.push(`/room/${room.code}/game`);
+  }
+
   return (
     <main className="min-h-screen bg-[#FAF7F2] px-6 py-8">
       <div className="mx-auto max-w-md">
@@ -261,7 +300,10 @@ export default function RoomPage() {
             )}
 
             {allPlayersReady && currentPlayer?.is_admin && (
-              <button className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95">
+              <button
+                onClick={startGame}
+                className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95"
+              >
                 Start
               </button>
             )}
