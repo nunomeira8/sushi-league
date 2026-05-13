@@ -41,6 +41,14 @@ export const translations = {
     hot_dishes: 'Hot Dishes',
     hot_dishesDescription:
       'Noodles, rice or others',
+    gameStarting: 'Game starting!',
+    prepareBattle:
+      'Prepare to defeat your friends and become the Sushi League champion.',
+    categoriesPlaying:
+      'Categories in play',
+    minutesLabel: 'minutes',
+    imDone:
+      'I surrender to the sushi 🍣',
   },
 
   pt: {
@@ -83,6 +91,14 @@ export const translations = {
     hot_dishes: 'Pratos Quentes',
     hot_dishesDescription:
       'Noodles, arroz ou outros',
+    gameStarting: 'O jogo vai começar!',
+    prepareBattle:
+      'Prepara-te para derrotar os teus amigos e tornares-te o campeão da Sushi League.',
+    categoriesPlaying:
+      'Categorias em jogo',
+    minutesLabel: 'minutos',
+    imDone:
+      'Já não entra mais sushi 🍣',
   },
 
   fr: {
@@ -125,5 +141,13 @@ export const translations = {
     hot_dishes: 'Plats Chauds',
     hot_dishesDescription:
       'Nouilles, riz et plats chauds',
+    gameStarting: 'Le jeu va commencer !',
+    prepareBattle:
+      'Prépare-toi à battre tes amis et devenir le champion de la Sushi League.',
+    categoriesPlaying:
+      'Catégories en jeu',
+    minutesLabel: 'minutes',
+    imDone:
+      'Je ne peux plus manger 🍣',
   },
 } satisfies Record<Language, Record<string, string>>
