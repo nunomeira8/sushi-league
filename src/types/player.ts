@@ -3,5 +3,6 @@ export type Player = {
   room_id: string
   name: string
   is_admin: boolean,
-  is_ready: boolean
+  is_ready: boolean,
+  finished: boolean
 }
