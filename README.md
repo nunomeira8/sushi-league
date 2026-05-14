@@ -2,7 +2,7 @@
 
 Sushi League is a real-time multiplayer sushi competition web app built for all-you-can-eat battles with friends.
 
-Players can create rooms, join live matches, track sushi pieces eaten, and compete against each other before the timer runs out.
+Players can create rooms, join matches, track sushi pieces eaten, and compete against each other before the timer runs out.
 
 Built mobile-first for real restaurant usage.
 
@@ -20,7 +20,6 @@ Built mobile-first for real restaurant usage.
 - 🍣 Live sushi score tracking
 - 📱 Mobile-first UI
 - ☁️ Fully cloud hosted
-- 📊 Match history storage
 
 ---
 
@@ -50,18 +49,6 @@ This project was created to:
 - improve frontend system design
 - build scalable multiplayer experiences
 - explore mobile-first UI/UX patterns
-
----
-
-## Future Improvements
-
-- Room creation
--  QR code room sharing
-- Sushi Counter
-- Extra-time
-- Match awards
-
----
 
 ## Status
 
