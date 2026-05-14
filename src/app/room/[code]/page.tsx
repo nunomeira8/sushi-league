@@ -215,6 +215,22 @@ export default function RoomPage() {
       })
       .eq('id', room.id);
 
+    const { data: playersData } = await supabase.from('players').select('*').eq('room_id', room.id);
+
+    if (playersData) {
+      const scoresToInsert = playersData.flatMap((player) =>
+        room.enabled_categories.map((category) => ({
+          player_id: player.id,
+
+          category,
+
+          score: 0,
+        })),
+      );
+
+      await supabase.from('player_scores').insert(scoresToInsert);
+    }
+
     router.push(`/room/${room.code}/game`);
   }
 

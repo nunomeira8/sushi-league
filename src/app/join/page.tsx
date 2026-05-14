@@ -34,7 +34,7 @@ export default function JoinPage() {
       .select("*")
       .eq("room_id", room.id)
       .eq("player_name", username)
-      .single();
+      .maybeSingle();
 
     if (blockedPlayer) {
       setError("Not allowed to join this room");
@@ -46,7 +46,7 @@ export default function JoinPage() {
       .select('*')
       .eq('room_id', room.id)
       .eq('name', username)
-      .single();
+      .maybeSingle();
 
     if (existingPlayer) {
       setError('Username already taken');
