@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { getPlayerId } from '@/lib/storage';
 
 import { GiveUpModal } from '@/components/game/GiveUpModal';
+import { CategoryCounter } from '@/components/game/CategoryCounter';
 
 export default function GamePage() {
   const params = useParams();
@@ -35,12 +36,16 @@ export default function GamePage() {
 
   const [isGiveUpOpen, setIsGiveUpOpen] = useState(false);
 
+  const [scores, setScores] = useState<Record<string, number>>({});
+
   async function fetchRoom() {
     const { data } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
     if (!data) return;
 
     setRoom(data);
+
+    await fetchScores();
 
     const now = new Date();
 
@@ -49,6 +54,41 @@ export default function GamePage() {
     const secondsLeft = Math.max(0, Math.floor((end.getTime() - now.getTime()) / 1000));
 
     setTimeLeft(secondsLeft);
+  }
+
+  async function fetchScores() {
+    const playerId = getPlayerId();
+
+    const { data } = await supabase.from('player_scores').select('*').eq('player_id', playerId);
+
+    if (!data) return;
+
+    const formattedScores: Record<string, number> = {};
+
+    data.forEach((item) => {
+      formattedScores[item.category] = item.score;
+    });
+
+    setScores(formattedScores);
+  }
+
+  async function updateScore(category: string, value: number) {
+    const playerId = getPlayerId();
+
+    const nextValue = Math.max(0, value);
+
+    setScores((prev) => ({
+      ...prev,
+      [category]: nextValue,
+    }));
+
+    await supabase
+      .from('player_scores')
+      .update({
+        score: nextValue,
+      })
+      .eq('player_id', playerId)
+      .eq('category', category);
   }
 
   useEffect(() => {
@@ -139,8 +179,17 @@ export default function GamePage() {
             </h1>
           </div>
 
-          <div className="flex-1" />
-
+          <div className="mt-10 flex flex-1 flex-col gap-4 overflow-y-auto pb-6">
+            {room.enabled_categories.map((category) => (
+              <CategoryCounter
+                key={category}
+                name={t[category as keyof typeof t] as string}
+                value={scores[category] || 0}
+                onIncrease={() => updateScore(category, (scores[category] || 0) + 1)}
+                onDecrease={() => updateScore(category, (scores[category] || 0) - 1)}
+              />
+            ))}
+          </div>
           <button
             onClick={() => setIsGiveUpOpen(true)}
             className="rounded-2xl bg-[#FF7F5C] py-5 text-lg font-semibold text-white shadow-sm transition active:scale-95"
