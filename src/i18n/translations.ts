@@ -17,6 +17,10 @@ export const translations = {
     usernameTaken: 'Username already taken',
     kicked: 'You were removed from the room',
     notAllowed: 'Not allowed to join this room',
+    inviteFriends:
+      'Invite your friends!',
+    scanToJoin:
+      'Scan to join instantly',
     admin: 'Admin',
     you: 'You',
     ready: 'Ready',
@@ -50,25 +54,18 @@ export const translations = {
     imDone:
       'I surrender to the sushi 🍣',
     giveUp: 'Give Up',
-
     giveUpTitle:
       'Are you really giving up?',
-
     giveUpDescription:
       'Your opponents are still fighting for sushi glory.',
-
     yesGiveUp:
       'Yes, I am done',
-
     keepEating:
       'No, I can still eat',
-
     waitingTitle:
       'The sushi battlefield continues...',
-
     stillEating:
       'Still eating',
-
     finishedEating:
       'Already surrendered',
   },
@@ -89,6 +86,10 @@ export const translations = {
     usernameTaken: 'Nome já está em uso',
     kicked: 'Foste removido da sala',
     notAllowed: 'Não tens permissão para entrar nesta sala',
+    inviteFriends:
+      'Convida os teus amigos!',
+    scanToJoin:
+      'Faz scan para entrar',
     admin: 'Admin',
     you: 'Tu',
     ready: 'Pronto',
@@ -154,6 +155,10 @@ export const translations = {
     usernameTaken: 'Nom déjà utilisé',
     kicked: 'Vous avez été exclu de la salle',
     notAllowed: "Vous n'êtes pas autorisé à rejoindre cette salle",
+    inviteFriends:
+      'Invite tes amis !',
+    scanToJoin:
+      'Scanne pour rejoindre',
     admin: 'Admin',
     you: 'Vous',
     ready: 'Prêt',

@@ -2,13 +2,21 @@
 
 import QRCode from 'react-qr-code';
 
+import { translations } from '@/i18n/translations';
+
 type Props = {
   roomCode: string;
+
   isOpen: boolean;
+
   onClose: () => void;
+
+  language: 'en' | 'pt' | 'fr';
 };
 
-export function QrCodeModal({ roomCode, isOpen, onClose }: Props) {
+export function QrCodeModal({ roomCode, isOpen, onClose, language }: Props) {
+  const t = translations[language];
+
   if (!isOpen) {
     return null;
   }
@@ -18,13 +26,13 @@ export function QrCodeModal({ roomCode, isOpen, onClose }: Props) {
   return (
     <button onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
       <div className="flex flex-col items-center rounded-[32px] bg-white p-8 shadow-2xl">
-        <h2 className="mb-6 text-2xl font-bold text-[#222222]">Invite your friends!</h2>
+        <h2 className="mb-6 text-2xl font-bold text-[#222222]">{t.inviteFriends}</h2>
 
         <div className="rounded-2xl bg-white p-4">
           <QRCode value={joinUrl} size={240} />
         </div>
 
-        <p className="mt-6 text-center text-sm text-gray-500">Scan to join instantly</p>
+        <p className="mt-6 text-center text-sm text-gray-500">{t.scanToJoin}</p>
 
         <p className="mt-2 text-center text-xs break-all text-gray-400">{joinUrl}</p>
       </div>
