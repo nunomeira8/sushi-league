@@ -242,7 +242,9 @@ export default function RoomPage() {
             <div>
               <p className="text-sm text-gray-500">{t.roomCode}</p>
 
-              <h1 className="text-4xl font-bold text-[#FF7F5C]">{room.code}</h1>
+              <button onClick={() => navigator.clipboard.writeText(room.code)} className="transition active:scale-95">
+                <h1 className="text-4xl font-bold text-[#FF7F5C]">{room.code}</h1>
+              </button>
             </div>
 
             {currentPlayer?.is_admin && (
@@ -327,7 +329,12 @@ export default function RoomPage() {
         </div>
       </div>
 
-      <QrCodeModal roomCode={room.code} isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} />
+      <QrCodeModal
+        language={language as 'en' | 'pt' | 'fr'}
+        roomCode={room.code}
+        isOpen={isQrOpen}
+        onClose={() => setIsQrOpen(false)}
+      />
 
       <SettingsModal
         language={language as 'en' | 'pt' | 'fr'}
