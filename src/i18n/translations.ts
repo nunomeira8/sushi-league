@@ -49,6 +49,28 @@ export const translations = {
     minutesLabel: 'minutes',
     imDone:
       'I surrender to the sushi 🍣',
+    giveUp: 'Give Up',
+
+    giveUpTitle:
+      'Are you really giving up?',
+
+    giveUpDescription:
+      'Your opponents are still fighting for sushi glory.',
+
+    yesGiveUp:
+      'Yes, I am done',
+
+    keepEating:
+      'No, I can still eat',
+
+    waitingTitle:
+      'The sushi battlefield continues...',
+
+    stillEating:
+      'Still eating',
+
+    finishedEating:
+      'Already surrendered',
   },
 
   pt: {
@@ -99,6 +121,21 @@ export const translations = {
     minutesLabel: 'minutos',
     imDone:
       'Já não entra mais sushi 🍣',
+    giveUp: 'Desistir',
+    giveUpTitle:
+      'Queres mesmo desistir?',
+    giveUpDescription:
+      'Os teus adversários ainda estão na batalha pelo sushi.',
+    yesGiveUp:
+      'Sim, já chega',
+    keepEating:
+      'Não, ainda aguento',
+    waitingTitle:
+      'A batalha do sushi continua...',
+    stillEating:
+      'Ainda a comer',
+    finishedEating:
+      'Já desistiu',
   },
 
   fr: {
@@ -149,5 +186,20 @@ export const translations = {
     minutesLabel: 'minutes',
     imDone:
       'Je ne peux plus manger 🍣',
+    giveUp: 'Abandonner',
+    giveUpTitle:
+      'Tu veux vraiment abandonner ?',
+    giveUpDescription:
+      'Tes adversaires continuent encore la bataille du sushi.',
+    yesGiveUp:
+      'Oui, j’abandonne',
+    keepEating:
+      'Non, je continue',
+    waitingTitle:
+      'La bataille du sushi continue...',
+    stillEating:
+      'Encore en train de manger',
+    finishedEating:
+      'A déjà abandonné',
   },
 } satisfies Record<Language, Record<string, string>>
