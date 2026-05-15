@@ -72,6 +72,10 @@ export const translations = {
       'The sushi battle is over',
     winnerReveal:
       'Prepare yourselves for the best part... let’s discover the winner.',
+    survivedFor:
+      'Survived for',
+    survivedEntireTime:
+      'Survived the entire battle',
   },
 
   pt: {
@@ -145,6 +149,10 @@ export const translations = {
       'A batalha do sushi terminou',
     winnerReveal:
       'Preparem-se para a melhor parte... vamos descobrir o vencedor.',
+    survivedFor:
+      'Aguentou durante',
+    survivedEntireTime:
+      'Sobreviveu à batalha inteira',
   },
 
   fr: {
@@ -218,5 +226,9 @@ export const translations = {
       'La bataille du sushi est terminée',
     winnerReveal:
       'Préparez-vous pour le meilleur moment... découvrons le gagnant.',
+    survivedFor:
+      'A survécu pendant',
+    survivedEntireTime:
+      'A survécu à toute la bataille',
   },
 } satisfies Record<Language, Record<string, string>>

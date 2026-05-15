@@ -128,10 +128,21 @@ export default function GamePage() {
   async function giveUp() {
     const playerId = getPlayerId();
 
+    if (!room.started_at) {
+      return;
+    }
+
+    const startedAt = new Date(room.started_at).getTime();
+    const now = Date.now();
+
+    const elapsedSeconds = Math.floor((now - startedAt) / 1000);
+
     await supabase
       .from('players')
       .update({
         finished: true,
+
+        finished_at: elapsedSeconds,
       })
       .eq('id', playerId);
 
@@ -143,16 +154,28 @@ export default function GamePage() {
   const seconds = timeLeft % 60;
 
   async function finishGame() {
+    if (!room) return;
+
     const playerId = getPlayerId();
 
-    await supabase
+    const startedAt = new Date(room.started_at).getTime();
+
+    const now = Date.now();
+
+    const elapsedSeconds = Math.floor((now - startedAt) / 1000);
+
+    const { error } = await supabase
       .from('players')
       .update({
         finished: true,
+
+        finished_at: elapsedSeconds,
       })
       .eq('id', playerId);
 
-    router.push(`/room/${room?.code}/waiting`);
+    console.log('FINISH ERROR', error);
+
+    router.push(`/room/${room.code}/waiting`);
   }
 
   return (

@@ -4,5 +4,6 @@ export type Player = {
   name: string
   is_admin: boolean,
   is_ready: boolean,
-  finished: boolean
+  finished: boolean,
+  finished_at: number | null
 }
