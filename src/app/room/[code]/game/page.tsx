@@ -130,7 +130,7 @@ export default function GamePage() {
 
     const playerId = getPlayerId();
 
-    const startedAt = new Date(room.started_at).getTime();
+    const startedAt = new Date(room.started_at!).getTime();
     const now = Date.now();
 
     const elapsedSeconds = Math.floor((now - startedAt) / 1000);
