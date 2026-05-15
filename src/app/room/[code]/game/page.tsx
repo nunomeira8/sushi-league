@@ -130,7 +130,9 @@ export default function GamePage() {
 
     const playerId = getPlayerId();
 
-    const startedAt = new Date(room.started_at!).getTime();
+    const startedAtValue = room.started_at;
+    const startedAt = new Date(startedAtValue).getTime();
+
     const now = Date.now();
 
     const elapsedSeconds = Math.floor((now - startedAt) / 1000);
@@ -152,11 +154,12 @@ export default function GamePage() {
   const seconds = timeLeft % 60;
 
   async function finishGame() {
-    if (!room) return;
+    if (!room || !room.started_at) return;
 
     const playerId = getPlayerId();
 
-    const startedAt = new Date(room.started_at).getTime();
+    const startedAtValue = room.started_at;
+    const startedAt = new Date(startedAtValue).getTime();
 
     const now = Date.now();
 
