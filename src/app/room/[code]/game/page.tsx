@@ -133,6 +133,8 @@ export default function GamePage() {
     const startedAtValue = room.started_at;
     const startedAt = new Date(startedAtValue).getTime();
 
+    const now = Date.now();
+
     const elapsedSeconds = Math.floor((now - startedAt) / 1000);
 
     await supabase
