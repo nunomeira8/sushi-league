@@ -68,6 +68,10 @@ export const translations = {
       'Still eating',
     finishedEating:
       'Already surrendered',
+    finishedTitle:
+      'The sushi battle is over',
+    winnerReveal:
+      'Prepare yourselves for the best part... let’s discover the winner.',
   },
 
   pt: {
@@ -137,6 +141,10 @@ export const translations = {
       'Ainda a comer',
     finishedEating:
       'Já desistiu',
+    finishedTitle:
+      'A batalha do sushi terminou',
+    winnerReveal:
+      'Preparem-se para a melhor parte... vamos descobrir o vencedor.',
   },
 
   fr: {
@@ -206,5 +214,9 @@ export const translations = {
       'Encore en train de manger',
     finishedEating:
       'A déjà abandonné',
+    finishedTitle:
+      'La bataille du sushi est terminée',
+    winnerReveal:
+      'Préparez-vous pour le meilleur moment... découvrons le gagnant.',
   },
 } satisfies Record<Language, Record<string, string>>

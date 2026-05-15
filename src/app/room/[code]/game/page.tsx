@@ -109,6 +109,8 @@ export default function GamePage() {
         if (prev <= 1) {
           clearInterval(interval);
 
+          finishGame();
+
           return 0;
         }
 
@@ -139,6 +141,19 @@ export default function GamePage() {
   const minutes = Math.floor(timeLeft / 60);
 
   const seconds = timeLeft % 60;
+
+  async function finishGame() {
+    const playerId = getPlayerId();
+
+    await supabase
+      .from('players')
+      .update({
+        finished: true,
+      })
+      .eq('id', playerId);
+
+    router.push(`/room/${room?.code}/waiting`);
+  }
 
   return (
     <main className="flex min-h-screen flex-col bg-[#FAF7F2] px-6 py-8">
