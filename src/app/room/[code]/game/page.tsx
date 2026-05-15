@@ -126,13 +126,11 @@ export default function GamePage() {
   }
 
   async function giveUp() {
+    if (!room || !room.started_at) return;
+
     const playerId = getPlayerId();
 
-    if (!room.started_at) {
-      return;
-    }
-
-    const startedAt = new Date(room.started_at).getTime();
+    const startedAt = new Date(room.started_at!).getTime();
     const now = Date.now();
 
     const elapsedSeconds = Math.floor((now - startedAt) / 1000);
