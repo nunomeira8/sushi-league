@@ -25,6 +25,8 @@ export default function WaitingPage() {
 
   const [players, setPlayers] = useState<Player[]>([]);
 
+  const allPlayersFinished = players.length > 0 && players.every((player) => player.finished);
+
   async function fetchData() {
     const { data: roomData } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
@@ -64,9 +66,15 @@ export default function WaitingPage() {
       <div className="mx-auto max-w-md">
         <div className="rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-[#222222]">{t.waitingTitle}</h1>
+            <h1 className="text-3xl font-bold text-[#222222]">
+              {allPlayersFinished ? t.finishedTitle : t.waitingTitle}
+            </h1>
 
             <p className="mt-3 text-gray-500">Sushi League 🍣</p>
+
+            {allPlayersFinished && (
+              <p className="mt-6 text-center text-lg leading-relaxed text-[#FF7F5C]">{t.winnerReveal}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-3">
@@ -74,13 +82,15 @@ export default function WaitingPage() {
               <div key={player.id} className="flex items-center justify-between rounded-2xl bg-[#FAF7F2] p-4">
                 <span className="font-medium text-[#222222]">{player.name}</span>
 
-                <div
-                  className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                    player.finished ? 'border-red-500 text-red-500' : 'border-green-500 text-green-500'
-                  }`}
-                >
-                  {player.finished ? t.finishedEating : t.stillEating}
-                </div>
+                {!allPlayersFinished && (
+                  <div
+                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                      player.finished ? 'border-red-500 text-red-500' : 'border-green-500 text-green-500'
+                    }`}
+                  >
+                    {player.finished ? t.finishedEating : t.stillEating}
+                  </div>
+                )}
               </div>
             ))}
           </div>
