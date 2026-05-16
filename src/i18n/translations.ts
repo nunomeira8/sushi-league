@@ -76,6 +76,7 @@ export const translations = {
       'Survived for',
     survivedEntireTime:
       'Survived the entire battle',
+      resultsIn: 'Results in',
   },
 
   pt: {
@@ -153,6 +154,7 @@ export const translations = {
       'Aguentou durante',
     survivedEntireTime:
       'Sobreviveu à batalha inteira',
+      resultsIn: 'Resultados em',
   },
 
   fr: {
@@ -230,5 +232,6 @@ export const translations = {
       'A survécu pendant',
     survivedEntireTime:
       'A survécu à toute la bataille',
+      resultsIn: 'Résultats dans',
   },
 } satisfies Record<Language, Record<string, string>>
