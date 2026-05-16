@@ -10,9 +10,15 @@ import { translations } from '@/i18n/translations';
 import { Language } from '@/types/language';
 
 import { getLanguage, saveLanguage } from '@/lib/language';
+import { HowToPlayModal } from '@/components/home/HowToPlayModal';
 
 export default function Home() {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] =
+    useState<Language>('en');
+
+  const [isHowToOpen, setIsHowToOpen] =
+    useState(false);
+
   const t = translations[language];
 
   useEffect(() => {
@@ -35,9 +41,18 @@ export default function Home() {
 
         <h2 className="mt-4 text-center text-xl font-medium text-[#FF8E72]">All you can (b)eat version!</h2>
 
+        <button
+          onClick={() => setIsHowToOpen(true)}
+          className="mt-5 rounded-2xl border border-[#FF7F5C] bg-white px-5 py-3 font-semibold text-[#FF7F5C] shadow-sm transition hover:scale-[1.03] active:scale-95"
+        >
+          {t.howToPlay}
+        </button>
+
         <WelcomeSection title={t.welcome} />
 
         <ActionCard createRoomText={t.createRoom} joinRoomText={t.joinRoom} />
+
+        <HowToPlayModal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)} t={t} />
       </div>
     </main>
   );
