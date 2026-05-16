@@ -16,14 +16,14 @@ import { getPlayerId } from '@/lib/storage';
 
 import { GiveUpModal } from '@/components/game/GiveUpModal';
 import { CategoryCounter } from '@/components/game/CategoryCounter';
+import { getLanguage } from '@/lib/language';
 
 export default function GamePage() {
   const params = useParams();
 
   const code = params.code as string;
 
-  const language = 'en';
-
+  const language = getLanguage();
   const t = translations[language];
 
   const [room, setRoom] = useState<Room | null>(null);

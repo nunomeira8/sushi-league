@@ -20,13 +20,14 @@ import { Room } from '@/types/room';
 import { QrCodeModal } from '../QrCodeModal';
 import { SettingsModal } from '../SettingsModal';
 
+import { getLanguage } from '@/lib/language';
+
 export default function RoomPage() {
   const params = useParams();
 
   const router = useRouter();
 
-  const language = 'en';
-
+  const language = getLanguage();
   const t = translations[language];
 
   const code = params.code as string;

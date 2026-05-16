@@ -1,14 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { RoomForm } from '@/components/forms/RoomForm';
+import { LanguageSelector } from '@/components/home/LanguageSelector';
 
 import { supabase } from '@/lib/supabase';
 import { savePlayerId } from '@/lib/storage';
 
-import { useEffect } from 'react';
+import { getLanguage, saveLanguage } from '@/lib/language';
+
+import { translations } from '@/i18n/translations';
+import { Language } from '@/types/language';
 
 export default function JoinPage() {
   const router = useRouter();
@@ -19,25 +24,47 @@ export default function JoinPage() {
 
   const [error, setError] = useState('');
 
+  const [language, setLanguage] = useState<Language>('en');
+
+  const [isRoomCodeLocked, setIsRoomCodeLocked] = useState(false);
+
+  useEffect(() => {
+    setLanguage(getLanguage());
+
+    const params = new URLSearchParams(window.location.search);
+
+    const roomFromUrl = params.get('room');
+
+    if (roomFromUrl) {
+      setRoomCode(roomFromUrl);
+
+      setIsRoomCodeLocked(true);
+    }
+  }, []);
+
+  const t = translations[language];
+
   async function handleJoinRoom() {
     setError('');
 
     const { data: room } = await supabase.from('rooms').select('*').eq('code', roomCode.toUpperCase()).single();
 
     if (!room) {
-      setError('Room not found');
+      setError(t.roomNotFound);
+
       return;
     }
 
     const { data: blockedPlayer } = await supabase
-      .from("room_blocklist")
-      .select("*")
-      .eq("room_id", room.id)
-      .eq("player_name", username)
+      .from('room_blocklist')
+      .select('*')
+      .eq('room_id', room.id)
+      .eq('player_name', username)
       .maybeSingle();
 
     if (blockedPlayer) {
-      setError("Not allowed to join this room");
+      setError(t.notAllowed);
+
       return;
     }
 
@@ -49,7 +76,8 @@ export default function JoinPage() {
       .maybeSingle();
 
     if (existingPlayer) {
-      setError('Username already taken');
+      setError(t.usernameTaken);
+
       return;
     }
 
@@ -68,28 +96,25 @@ export default function JoinPage() {
     router.push(`/room/${room.code}`);
   }
 
-  const [isRoomCodeLocked, setIsRoomCodeLocked] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    const roomFromUrl = params.get('room');
-
-    if (roomFromUrl) {
-      setRoomCode(roomFromUrl);
-      setIsRoomCodeLocked(true);
-    }
-  }, []);
-
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#FAF7F2] px-6">
+    <main className="relative flex min-h-screen items-center justify-center bg-[#FAF7F2] px-6">
+      <div className="absolute top-6 flex w-full justify-end px-6">
+        <LanguageSelector
+          selectedLanguage={language}
+          onSelect={(lang) => {
+            setLanguage(lang);
+            saveLanguage(lang);
+          }}
+        />
+      </div>
+
       <RoomForm
-        title="Join Room"
+        title={t.joinRoom}
         showRoomCode
         isRoomCodeLocked={isRoomCodeLocked}
-        usernamePlaceholder="Username"
-        roomCodePlaceholder="Room code"
-        continueText="Continue"
+        usernamePlaceholder={t.username}
+        roomCodePlaceholder={t.roomCode}
+        continueText={t.continue}
         username={username}
         roomCode={roomCode}
         onUsernameChange={setUsername}

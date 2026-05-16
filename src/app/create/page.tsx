@@ -1,18 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { RoomForm } from '@/components/forms/RoomForm';
+import { LanguageSelector } from '@/components/home/LanguageSelector';
 
 import { generateRoomCode } from '@/lib/generateRoomCode';
 import { supabase } from '@/lib/supabase';
 import { savePlayerId } from '@/lib/storage';
+import { getLanguage, saveLanguage } from '@/lib/language';
+
+import { translations } from '@/i18n/translations';
+import { Language } from '@/types/language';
 
 export default function CreatePage() {
   const router = useRouter();
 
   const [username, setUsername] = useState('');
+
+  const [language, setLanguage] = useState<Language>('en');
+
+  useEffect(() => {
+    setLanguage(getLanguage());
+  }, []);
+
+  const t = translations[language];
 
   async function handleCreateRoom() {
     const roomCode = generateRoomCode();
@@ -43,16 +57,26 @@ export default function CreatePage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#FAF7F2] px-6">
+    <main className="relative flex min-h-screen items-center justify-center bg-[#FAF7F2] px-6">
+      <div className="absolute top-6 flex w-full justify-end px-6">
+        <LanguageSelector
+          selectedLanguage={language}
+          onSelect={(lang) => {
+            setLanguage(lang);
+            saveLanguage(lang);
+          }}
+        />
+      </div>
+
       <RoomForm
-        title="Create Room"
-        usernamePlaceholder="Username"
+        title={t.createRoom}
+        usernamePlaceholder={t.username}
         roomCodePlaceholder=""
-        continueText="Continue"
+        continueText={t.continue}
         username={username}
         roomCode=""
         onUsernameChange={setUsername}
-        onRoomCodeChange={() => { }}
+        onRoomCodeChange={() => {}}
         onSubmit={handleCreateRoom}
       />
     </main>
