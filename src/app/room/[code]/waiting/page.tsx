@@ -11,14 +11,14 @@ import { translations } from '@/i18n/translations';
 import { Player } from '@/types/player';
 
 import { Room } from '@/types/room';
+import { getLanguage } from '@/lib/language';
 
 export default function WaitingPage() {
   const params = useParams();
 
   const code = params.code as string;
 
-  const language = 'en';
-
+  const language = getLanguage();
   const t = translations[language];
 
   const [room, setRoom] = useState<Room | null>(null);
