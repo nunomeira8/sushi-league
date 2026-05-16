@@ -76,7 +76,29 @@ export const translations = {
       'Survived for',
     survivedEntireTime:
       'Survived the entire battle',
-      resultsIn: 'Results in',
+    resultsIn: 'Results in',
+    howToPlay: 'How to Play',
+    howToPlayButton: "OK... I'm hungry 🍣",
+    goalTitle: 'Goal',
+    goalDescription:
+      'Eat sushi. Beat your rivals. Regret nothing.',
+    joinRoomDescription:
+      'Create or join a room and pick your name.',
+    chooseBattleTitle: 'Choose the Battle',
+    chooseBattleDescription:
+      'The admin chooses the game duration and categories in play.',
+    readyTitle: 'Everyone Must Be Ready',
+    readyDescription:
+      'Nobody escapes. Everyone presses READY before the battle begins.',
+    gameTitle: 'Battle Time',
+    gameDescription:
+      'Count your food with the counters, survive the timer and try not to vomit.',
+    htp_giveUpTitle: 'Giving Up',
+    htp_giveUpDescription:
+      'You can surrender… but the sushi shame lasts forever.',
+    winnerTitle: 'The Final Champion',
+    winnerDescription:
+      'At the end, each category winners appear and then… THE SUSHI LEAGUE CHAMPION.',
   },
 
   pt: {
@@ -154,7 +176,29 @@ export const translations = {
       'Aguentou durante',
     survivedEntireTime:
       'Sobreviveu à batalha inteira',
-      resultsIn: 'Resultados em',
+    resultsIn: 'Resultados em',
+    howToPlay: 'Como Jogar',
+    howToPlayButton: 'OK... fiquei com fome 🍣',
+    goalTitle: 'Objetivo',
+    goalDescription:
+      'Comer sushi. Vencer os adversários. Arrepender-se depois.',
+    joinRoomDescription:
+      'Cria ou entra numa sala e escolhe o teu nome.',
+    chooseBattleTitle: 'Escolher a Batalha',
+    chooseBattleDescription:
+      'O admin escolhe o tempo do jogo e as categorias. Tens medo de noodles? Desativa pratos quentes.',
+    readyTitle: 'Todos Têm de Estar Prontos',
+    readyDescription:
+      'Ninguém foge. Toda a gente tem de carregar READY antes da batalha começar.',
+    gameTitle: 'Hora da Batalha',
+    gameDescription:
+      'Conta a tua comida, usa os contadores e tenta não vomitar.',
+    htp_giveUpTitle: 'Desistir',
+    htp_giveUpDescription:
+      'Podes desistir… mas a vergonha do sushi dura para sempre.',
+    winnerTitle: 'O Grande Campeão',
+    winnerDescription:
+      'No final aparecem os vencedores por categoria e depois… O CAMPEÃO DA SUSHI LEAGUE.',
   },
 
   fr: {
@@ -232,6 +276,28 @@ export const translations = {
       'A survécu pendant',
     survivedEntireTime:
       'A survécu à toute la bataille',
-      resultsIn: 'Résultats dans',
+    resultsIn: 'Résultats dans',
+    howToPlay: 'Comment Jouer',
+    howToPlayButton: "OK... j'ai faim 🍣",
+    goalTitle: 'Objectif',
+    goalDescription:
+      'Manger des sushis. Battre ses adversaires. Regretter après.',
+    joinRoomDescription:
+      'Créez ou rejoignez une salle et choisissez votre nom.',
+    chooseBattleTitle: 'Choisir la Bataille',
+    chooseBattleDescription:
+      "L’admin choisit la durée et les catégories du jeu.",
+    readyTitle: 'Tout le Monde Doit Être Prêt',
+    readyDescription:
+      'Personne ne s’échappe. Tout le monde doit appuyer sur READY.',
+    gameTitle: 'L’Heure du Combat',
+    gameDescription:
+      'Comptez votre nourriture, utilisez les compteurs et essayez de ne pas vomiter.',
+    htp_giveUpTitle: 'Abandonner',
+    htp_giveUpDescription:
+      'Vous pouvez abandonner… mais la honte sushi dure pour toujours.',
+    winnerTitle: 'Le Champion',
+    winnerDescription:
+      'À la fin, les gagnants des catégories apparaissent puis… LE CHAMPION DE LA SUSHI LEAGUE.',
   },
 } satisfies Record<Language, Record<string, string>>
