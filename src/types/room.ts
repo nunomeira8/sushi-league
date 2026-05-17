@@ -3,6 +3,7 @@ export type Room = {
   code: string
   is_started: boolean,
   started_at: string | null,
+  awards_start_at: string | null;
   game_duration: number
   enabled_categories: string[]
 }

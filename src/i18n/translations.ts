@@ -99,6 +99,7 @@ export const translations = {
     winnerTitle: 'The Final Champion',
     winnerDescription:
       'At the end, each category winners appear and then… THE SUSHI LEAGUE CHAMPION.',
+    calculatingWinners: 'Calculating winners...',
   },
 
   pt: {
@@ -199,6 +200,7 @@ export const translations = {
     winnerTitle: 'O Grande Campeão',
     winnerDescription:
       'No final aparecem os vencedores por categoria e depois… O CAMPEÃO DA SUSHI LEAGUE.',
+    calculatingWinners: 'A calcular os vencedores...',
   },
 
   fr: {
@@ -299,5 +301,7 @@ export const translations = {
     winnerTitle: 'Le Champion',
     winnerDescription:
       'À la fin, les gagnants des catégories apparaissent puis… LE CHAMPION DE LA SUSHI LEAGUE.',
+    calculatingWinners:
+      'Calcul des gagnants...',
   },
 } satisfies Record<Language, Record<string, string>>
