@@ -12,12 +12,12 @@ import { Language } from '@/types/language';
 import { getLanguage, saveLanguage } from '@/lib/language';
 import { HowToPlayModal } from '@/components/home/HowToPlayModal';
 
-export default function Home() {
-  const [language, setLanguage] =
-    useState<Language>('en');
+import packageJson from '../../package.json';
 
-  const [isHowToOpen, setIsHowToOpen] =
-    useState(false);
+export default function Home() {
+  const [language, setLanguage] = useState<Language>('en');
+
+  const [isHowToOpen, setIsHowToOpen] = useState(false);
 
   const t = translations[language];
 
@@ -54,6 +54,7 @@ export default function Home() {
 
         <HowToPlayModal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)} t={t} />
       </div>
+      <p className="pb-6 text-sm text-gray-400">v{packageJson.version}</p>
     </main>
   );
 }
