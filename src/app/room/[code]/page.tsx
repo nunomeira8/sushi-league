@@ -248,14 +248,12 @@ export default function RoomPage() {
               </button>
             </div>
 
-            {currentPlayer?.is_admin && (
-              <button
-                onClick={() => setIsQrOpen(true)}
-                className="rounded-2xl border border-gray-200 bg-[#F3F1EC] p-3 text-[#222222] shadow-sm transition hover:scale-105 active:scale-95"
-              >
-                <QrCode size={26} strokeWidth={2.5} />
-              </button>
-            )}
+            <button
+              onClick={() => setIsQrOpen(true)}
+              className="rounded-2xl border border-gray-200 bg-[#F3F1EC] p-3 text-[#222222] shadow-sm transition hover:scale-105 active:scale-95"
+            >
+              <QrCode size={26} strokeWidth={2.5} />
+            </button>
           </div>
 
           <div>

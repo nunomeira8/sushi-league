@@ -1,20 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+
 import { supabase } from '@/lib/supabase';
+import { getLanguage } from '@/lib/language';
+import { getPlayerId } from '@/lib/storage';
+import { generateAwards } from '@/lib/generateAwards';
+
 import { translations } from '@/i18n/translations';
+
 import { Player } from '@/types/player';
 import { Room } from '@/types/room';
-import { getLanguage } from '@/lib/language';
-import { generateAwards } from '@/lib/generateAwards';
-import { useRouter } from 'next/navigation';
-import { getPlayerId } from '@/lib/storage';
 
 export default function WaitingPage() {
   const params = useParams();
 
   const code = params.code as string;
+
+  const router = useRouter();
 
   const language = getLanguage();
 
@@ -24,12 +28,9 @@ export default function WaitingPage() {
 
   const [players, setPlayers] = useState<Player[]>([]);
 
+  const [countdown, setCountdown] = useState<number | null>(null);
+
   const allPlayersFinished = players.length > 0 && players.every((player) => player.finished);
-
-  const router = useRouter();
-  const [countdown, setCountdown] = useState(5);
-
-  const currentPlayer = players.find((player) => player.id === getPlayerId());
 
   async function fetchData() {
     const { data: roomData } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
@@ -56,50 +57,72 @@ export default function WaitingPage() {
 
     const interval = setInterval(() => {
       fetchData();
-    }, 3000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    if (!allPlayersFinished || !room || players.length === 0) {
-      return;
-    }
+    if (!allPlayersFinished || !room) return;
 
     const currentPlayer = players.find((player) => player.id === getPlayerId());
 
     async function prepareAwards() {
-      if (!room) return;
-
-      if (currentPlayer?.is_admin) {
+      if(!room) return;
+      
+      if (currentPlayer?.is_admin && !room.awards_start_at) {
         await generateAwards(room.id);
+
+        const awardsStart = new Date(Date.now() + 3000).toISOString();
+
+        await supabase
+          .from('rooms')
+          .update({
+            awards_start_at: awardsStart,
+          })
+          .eq('id', room.id);
+
+        setRoom((prev) =>
+          prev
+            ? {
+                ...prev,
+                awards_start_at: awardsStart,
+              }
+            : null,
+        );
       }
-
-      const interval = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-
-            return 0;
-          }
-
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(interval);
     }
 
     prepareAwards();
   }, [allPlayersFinished, room, players]);
 
   useEffect(() => {
-    if (!allPlayersFinished) return;
+    if (!room?.awards_start_at) return;
 
-    if (countdown === 0) {
-      router.push(`/room/${code}/awards`);
-    }
-  }, [countdown, allPlayersFinished]);
+    const interval = setInterval(() => {
+      const now = Date.now();
+
+      const calculatingEnd = new Date(room.awards_start_at!).getTime();
+
+      const countdownStart = calculatingEnd;
+      const awardsReveal = countdownStart + 5000;
+
+      if (now < countdownStart) {
+        setCountdown(null);
+        return;
+      }
+
+      const secondsLeft = Math.max(0, Math.ceil((awardsReveal - now) / 1000));
+
+      setCountdown(secondsLeft);
+
+      if (secondsLeft <= 0) {
+        router.push(`/room/${code}/awards`);
+      }
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [room?.awards_start_at]);
 
   if (!room) {
     return null;
@@ -116,11 +139,17 @@ export default function WaitingPage() {
 
             {allPlayersFinished ? (
               <>
-                <p className="mt-4 text-lg text-[#FF7F5C]">{t.winnerReveal}</p>
+                {countdown === null ? (
+                  <p className="mt-4 text-lg text-[#FF7F5C]">{t.calculatingWinners}</p>
+                ) : (
+                  <>
+                    <p className="mt-4 text-lg text-[#FF7F5C]">{t.winnerReveal}</p>
 
-                <p className="mt-3 text-sm font-semibold text-gray-500">
-                  {t.resultsIn} {countdown}
-                </p>
+                    <p className="mt-3 text-sm font-semibold text-gray-500">
+                      {t.resultsIn} {countdown ?? '...'}
+                    </p>
+                  </>
+                )}
               </>
             ) : (
               <p className="mt-3 text-gray-500">Sushi League 🍣</p>
