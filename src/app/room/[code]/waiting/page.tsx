@@ -68,6 +68,8 @@ export default function WaitingPage() {
     const currentPlayer = players.find((player) => player.id === getPlayerId());
 
     async function prepareAwards() {
+      if(!room) return;
+      
       if (currentPlayer?.is_admin && !room.awards_start_at) {
         await generateAwards(room.id);
 
