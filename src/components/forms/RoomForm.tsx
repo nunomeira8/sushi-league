@@ -1,5 +1,7 @@
 'use client';
 
+import { LoadingSpinner } from '../ui/LoadingSpinner';
+
 type Props = {
   title: string;
   showRoomCode?: boolean;
@@ -10,6 +12,9 @@ type Props = {
 
   username: string;
   roomCode: string;
+
+  isLoading?: boolean;
+  loadingText?: string;
 
   onUsernameChange: (value: string) => void;
   onRoomCodeChange: (value: string) => void;
@@ -27,6 +32,8 @@ export function RoomForm({
   continueText,
   username,
   roomCode,
+  isLoading = false,
+  loadingText,
   onUsernameChange,
   onRoomCodeChange,
   onSubmit,
@@ -67,9 +74,13 @@ export function RoomForm({
 
         <button
           onClick={onSubmit}
-          className="rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white active:scale-95"
+          disabled={isLoading}
+          className="rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white active:scale-95 disabled:opacity-70"
         >
-          {continueText}
+          <span className="flex items-center justify-center gap-2">
+            {isLoading && <LoadingSpinner size="sm" />}
+            {isLoading ? loadingText || continueText : continueText}
+          </span>
         </button>
       </div>
     </div>

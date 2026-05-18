@@ -28,6 +28,8 @@ export default function JoinPage() {
 
   const [isRoomCodeLocked, setIsRoomCodeLocked] = useState(false);
 
+  const [isJoining, setIsJoining] = useState(false);
+
   useEffect(() => {
     setLanguage(getLanguage());
 
@@ -45,57 +47,60 @@ export default function JoinPage() {
   const t = translations[language];
 
   async function handleJoinRoom() {
+    if (isJoining) return;
+
     setError('');
+    setIsJoining(true);
 
-    const { data: room } = await supabase.from('rooms').select('*').eq('code', roomCode.toUpperCase()).single();
+    try {
+      const { data: room } = await supabase.from('rooms').select('*').eq('code', roomCode.toUpperCase()).single();
 
-    if (!room) {
-      setError(t.roomNotFound);
+      if (!room) {
+        setError(t.roomNotFound);
+        return;
+      }
 
-      return;
+      const { data: blockedPlayer } = await supabase
+        .from('room_blocklist')
+        .select('*')
+        .eq('room_id', room.id)
+        .eq('player_name', username)
+        .maybeSingle();
+
+      if (blockedPlayer) {
+        setError(t.notAllowed);
+        return;
+      }
+
+      const { data: existingPlayer } = await supabase
+        .from('players')
+        .select('*')
+        .eq('room_id', room.id)
+        .eq('name', username)
+        .maybeSingle();
+
+      if (existingPlayer) {
+        setError(t.usernameTaken);
+        return;
+      }
+
+      const { data: player } = await supabase
+        .from('players')
+        .insert({
+          room_id: room.id,
+          name: username,
+          is_admin: false,
+        })
+        .select()
+        .single();
+
+      savePlayerId(player.id);
+
+      router.push(`/room/${room.code}`);
+    } finally {
+      setIsJoining(false);
     }
-
-    const { data: blockedPlayer } = await supabase
-      .from('room_blocklist')
-      .select('*')
-      .eq('room_id', room.id)
-      .eq('player_name', username)
-      .maybeSingle();
-
-    if (blockedPlayer) {
-      setError(t.notAllowed);
-
-      return;
-    }
-
-    const { data: existingPlayer } = await supabase
-      .from('players')
-      .select('*')
-      .eq('room_id', room.id)
-      .eq('name', username)
-      .maybeSingle();
-
-    if (existingPlayer) {
-      setError(t.usernameTaken);
-
-      return;
-    }
-
-    const { data: player } = await supabase
-      .from('players')
-      .insert({
-        room_id: room.id,
-        name: username,
-        is_admin: false,
-      })
-      .select()
-      .single();
-
-    savePlayerId(player.id);
-
-    router.push(`/room/${room.code}`);
   }
-
   return (
     <main className="relative flex min-h-screen items-center justify-center bg-[#FAF7F2] px-6">
       <div className="absolute top-6 flex w-full justify-end px-6">
@@ -117,6 +122,8 @@ export default function JoinPage() {
         continueText={t.continue}
         username={username}
         roomCode={roomCode}
+        isLoading={isJoining}
+        loadingText={t.joiningRoom}
         onUsernameChange={setUsername}
         onRoomCodeChange={setRoomCode}
         onSubmit={handleJoinRoom}
