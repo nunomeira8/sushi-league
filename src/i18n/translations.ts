@@ -53,11 +53,11 @@ export const translations = {
     minutesLabel: 'minutes',
     imDone:
       'I surrender to the sushi 🍣',
-    giveUp: 'Give Up',
+    giveUp: 'I’m Done Eating',
     giveUpTitle:
-      'Are you really giving up?',
+      'Done eating already? 🍣',
     giveUpDescription:
-      'Your opponents are still fighting for sushi glory.',
+      'Your score is safe! You’ll simply wait for the remaining players.',
     yesGiveUp:
       'Yes, I am done',
     keepEating:
@@ -81,24 +81,24 @@ export const translations = {
     howToPlayButton: "OK... I'm hungry 🍣",
     goalTitle: 'Goal',
     goalDescription:
-      'Eat sushi. Beat your rivals. Regret nothing.',
+      'Eat sushi, count what you eat and try to finish with the highest score.',
     joinRoomDescription:
-      'Create or join a room and pick your name.',
-    chooseBattleTitle: 'Choose the Battle',
+      'Create a room or join one using a room code or QR Code. Pick your name and join your friends.',
+    chooseBattleTitle: 'Game Settings',
     chooseBattleDescription:
-      'The admin chooses the game duration and categories in play.',
-    readyTitle: 'Everyone Must Be Ready',
+      'The admin chooses the game duration and which categories will count.',
+    readyTitle: 'Get Ready',
     readyDescription:
-      'Nobody escapes. Everyone presses READY before the battle begins.',
-    gameTitle: 'Battle Time',
+      'Every player must press READY before the battle begins.',
+    gameTitle: 'Time to Eat 🍣',
     gameDescription:
-      'Count your food with the counters, survive the timer and try not to vomit.',
-    htp_giveUpTitle: 'Giving Up',
+      'During the game, use the counters to track what you eat in each category.',
+    htp_giveUpTitle: 'When You Can’t Eat Anymore',
     htp_giveUpDescription:
-      'You can surrender… but the sushi shame lasts forever.',
-    winnerTitle: 'The Final Champion',
+      'Finished before time runs out? Mark yourself as done and wait for the other players.',
+    winnerTitle: 'Results',
     winnerDescription:
-      'At the end, each category winners appear and then… THE SUSHI LEAGUE CHAMPION.',
+      'At the end, category winners are revealed… and finally the Sushi League Champion.',
     calculatingWinners: 'Calculating winners...',
   },
 
@@ -154,11 +154,11 @@ export const translations = {
     minutesLabel: 'minutos',
     imDone:
       'Já não entra mais sushi 🍣',
-    giveUp: 'Desistir',
+    giveUp: 'Terminei de Comer',
     giveUpTitle:
-      'Queres mesmo desistir?',
+      'Já não consegues comer mais? 🍣',
     giveUpDescription:
-      'Os teus adversários ainda estão na batalha pelo sushi.',
+      'Os teus pontos ficam guardados! Vais apenas esperar pelos restantes jogadores.',
     yesGiveUp:
       'Sim, já chega',
     keepEating:
@@ -182,24 +182,24 @@ export const translations = {
     howToPlayButton: 'OK... fiquei com fome 🍣',
     goalTitle: 'Objetivo',
     goalDescription:
-      'Comer sushi. Vencer os adversários. Arrepender-se depois.',
+      'Come sushi, conta as peças que comes e tenta terminar com a maior pontuação.',
     joinRoomDescription:
-      'Cria ou entra numa sala e escolhe o teu nome.',
-    chooseBattleTitle: 'Escolher a Batalha',
+      'Cria uma sala ou entra numa existente com um código ou QR Code. Escolhe o teu nome e junta-te aos teus amigos.',
+    chooseBattleTitle: 'Configurar o Jogo',
     chooseBattleDescription:
-      'O admin escolhe o tempo do jogo e as categorias. Tens medo de noodles? Desativa pratos quentes.',
-    readyTitle: 'Todos Têm de Estar Prontos',
+      'O admin escolhe o tempo da partida e as categorias que vão contar para a pontuação.',
+    readyTitle: 'Preparar a Batalha',
     readyDescription:
-      'Ninguém foge. Toda a gente tem de carregar READY antes da batalha começar.',
-    gameTitle: 'Hora da Batalha',
+      'Todos os jogadores têm de carregar em READY antes do jogo começar.',
+    gameTitle: 'Hora de Comer 🍣',
     gameDescription:
-      'Conta a tua comida, usa os contadores e tenta não vomitar.',
-    htp_giveUpTitle: 'Desistir',
+      'Durante o tempo do jogo, usa os contadores para registar o que estás a comer em cada categoria.',
+    htp_giveUpTitle: 'Quando Já Não Dá Mais',
     htp_giveUpDescription:
-      'Podes desistir… mas a vergonha do sushi dura para sempre.',
-    winnerTitle: 'O Grande Campeão',
+      'Terminaste antes do tempo? Podes marcar que acabaste e esperar pelos restantes jogadores.',
+    winnerTitle: 'Os Resultados',
     winnerDescription:
-      'No final aparecem os vencedores por categoria e depois… O CAMPEÃO DA SUSHI LEAGUE.',
+      'No fim aparecem os vencedores de cada categoria e o campeão final da Sushi League.',
     calculatingWinners: 'A calcular os vencedores...',
   },
 
@@ -255,11 +255,11 @@ export const translations = {
     minutesLabel: 'minutes',
     imDone:
       'Je ne peux plus manger 🍣',
-    giveUp: 'Abandonner',
+    giveUp: 'J’ai Fini de Manger',
     giveUpTitle:
-      'Tu veux vraiment abandonner ?',
+      'Tu n’en peux plus ? 🍣',
     giveUpDescription:
-      'Tes adversaires continuent encore la bataille du sushi.',
+      'Ton score est sauvegardé ! Tu attendras simplement les autres joueurs.',
     yesGiveUp:
       'Oui, j’abandonne',
     keepEating:
@@ -281,26 +281,30 @@ export const translations = {
     resultsIn: 'Résultats dans',
     howToPlay: 'Comment Jouer',
     howToPlayButton: "OK... j'ai faim 🍣",
-    goalTitle: 'Objectif',
     goalDescription:
-      'Manger des sushis. Battre ses adversaires. Regretter après.',
+      'Mange des sushis, compte ce que tu manges et essaie d’obtenir le meilleur score.',
     joinRoomDescription:
-      'Créez ou rejoignez une salle et choisissez votre nom.',
-    chooseBattleTitle: 'Choisir la Bataille',
+      'Crée une salle ou rejoins-en une avec un code ou un QR Code. Choisis ton nom et rejoins tes amis.',
+
+    chooseBattleTitle: 'Configurer la Partie',
     chooseBattleDescription:
-      "L’admin choisit la durée et les catégories du jeu.",
-    readyTitle: 'Tout le Monde Doit Être Prêt',
+      'L’admin choisit la durée du jeu et les catégories qui compteront.',
+
+    readyTitle: 'Préparez-vous',
     readyDescription:
-      'Personne ne s’échappe. Tout le monde doit appuyer sur READY.',
-    gameTitle: 'L’Heure du Combat',
+      'Tous les joueurs doivent appuyer sur READY avant le début de la bataille.',
+
+    gameTitle: 'À Table 🍣',
     gameDescription:
-      'Comptez votre nourriture, utilisez les compteurs et essayez de ne pas vomiter.',
-    htp_giveUpTitle: 'Abandonner',
+      'Pendant le jeu, utilise les compteurs pour enregistrer ce que tu manges dans chaque catégorie.',
+
+    htp_giveUpTitle: 'Quand Tu N’en Peux Plus',
     htp_giveUpDescription:
-      'Vous pouvez abandonner… mais la honte sushi dure pour toujours.',
-    winnerTitle: 'Le Champion',
+      'Tu as terminé avant la fin ? Indique que tu as fini et attends les autres joueurs.',
+
+    winnerTitle: 'Résultats',
     winnerDescription:
-      'À la fin, les gagnants des catégories apparaissent puis… LE CHAMPION DE LA SUSHI LEAGUE.',
+      'À la fin, les gagnants de chaque catégorie sont révélés… puis le grand champion de Sushi League.',
     calculatingWinners:
       'Calcul des gagnants...',
   },
