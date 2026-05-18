@@ -21,6 +21,7 @@ export const translations = {
       'Invite your friends!',
     scanToJoin:
       'Scan to join instantly',
+    copied: 'Copied!',
     admin: 'Admin',
     you: 'You',
     ready: 'Ready',
@@ -45,6 +46,7 @@ export const translations = {
     hot_dishes: 'Hot Dishes',
     hot_dishesDescription:
       'Noodles, rice or others',
+    atLeastOneCategory: 'At least one category must be selected',
     gameStarting: 'Game starting!',
     prepareBattle:
       'Prepare to defeat your friends and become the Sushi League champion.',
@@ -148,6 +150,7 @@ export const translations = {
       'Convida os teus amigos!',
     scanToJoin:
       'Faz scan para entrar',
+    copied: 'Copiado!',
     admin: 'Admin',
     you: 'Tu',
     ready: 'Pronto',
@@ -172,6 +175,7 @@ export const translations = {
     hot_dishes: 'Pratos Quentes',
     hot_dishesDescription:
       'Noodles, arroz ou outros',
+    atLeastOneCategory: 'Pelo menos uma categoria deve ser selecionada',
     gameStarting: 'O jogo vai começar!',
     prepareBattle:
       'Prepara-te para derrotar os teus amigos e tornares-te o campeão da Sushi League.',
@@ -275,6 +279,7 @@ export const translations = {
       'Invite tes amis !',
     scanToJoin:
       'Scanne pour rejoindre',
+    copied: 'Copié !',
     admin: 'Admin',
     you: 'Vous',
     ready: 'Prêt',
@@ -299,6 +304,7 @@ export const translations = {
     hot_dishes: 'Plats Chauds',
     hot_dishesDescription:
       'Nouilles, riz et plats chauds',
+    atLeastOneCategory: 'Au moins une catégorie doit être sélectionnée',
     gameStarting: 'Le jeu va commencer !',
     prepareBattle:
       'Prépare-toi à battre tes amis et devenir le champion de la Sushi League.',
