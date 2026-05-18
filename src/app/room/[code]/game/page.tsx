@@ -18,6 +18,8 @@ import { GiveUpModal } from '@/components/game/GiveUpModal';
 import { CategoryCounter } from '@/components/game/CategoryCounter';
 import { getLanguage } from '@/lib/language';
 
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+
 export default function GamePage() {
   const params = useParams();
 
@@ -37,6 +39,8 @@ export default function GamePage() {
   const [isGiveUpOpen, setIsGiveUpOpen] = useState(false);
 
   const [scores, setScores] = useState<Record<string, number>>({});
+
+  const [isFinishing, setIsFinishing] = useState(false);
 
   async function fetchRoom() {
     const { data } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
@@ -126,27 +130,33 @@ export default function GamePage() {
   }
 
   async function giveUp() {
-    if (!room || !room.started_at) return;
+    if (isFinishing) return;
 
-    const playerId = getPlayerId();
+    setIsFinishing(true);
 
-    const startedAtValue = room.started_at;
-    const startedAt = new Date(startedAtValue).getTime();
+    try {
+      const playerId = getPlayerId();
 
-    const now = Date.now();
+      if (!room?.started_at) return;
 
-    const elapsedSeconds = Math.floor((now - startedAt) / 1000);
+      const startedAt = new Date(room.started_at).getTime();
 
-    await supabase
-      .from('players')
-      .update({
-        finished: true,
+      const now = Date.now();
 
-        finished_at: elapsedSeconds,
-      })
-      .eq('id', playerId);
+      const elapsedSeconds = Math.floor((now - startedAt) / 1000);
 
-    router.push(`/room/${code}/waiting`);
+      await supabase
+        .from('players')
+        .update({
+          finished: true,
+          finished_at: elapsedSeconds,
+        })
+        .eq('id', playerId);
+
+      router.push(`/room/${code}/waiting`);
+    } finally {
+      setIsFinishing(false);
+    }
   }
 
   const minutes = Math.floor(timeLeft / 60);
@@ -241,6 +251,7 @@ export default function GamePage() {
       <GiveUpModal
         language={language as 'en' | 'pt' | 'fr'}
         isOpen={isGiveUpOpen}
+        isLoading={isFinishing}
         onClose={() => setIsGiveUpOpen(false)}
         onConfirm={giveUp}
       />

@@ -1,5 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
+import { LoadingSpinner } from '../ui/LoadingSpinner';
+
 type Props = {
   title: string;
   showRoomCode?: boolean;
@@ -10,6 +14,12 @@ type Props = {
 
   username: string;
   roomCode: string;
+
+  isLoading?: boolean;
+  loadingText?: string;
+
+  usernameRequiredError: string;
+  usernameMinLengthError: string;
 
   onUsernameChange: (value: string) => void;
   onRoomCodeChange: (value: string) => void;
@@ -27,23 +37,62 @@ export function RoomForm({
   continueText,
   username,
   roomCode,
+  isLoading = false,
+  loadingText,
+  usernameRequiredError,
+  usernameMinLengthError,
   onUsernameChange,
   onRoomCodeChange,
   onSubmit,
   error,
 }: Props) {
+  const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
+
+  const trimmedUsername = username.trim();
+
+  const usernameError =
+    hasTriedSubmit && !trimmedUsername
+      ? usernameRequiredError
+      : hasTriedSubmit && trimmedUsername.length < 3
+        ? usernameMinLengthError
+        : '';
+
+  function handleSubmit() {
+    setHasTriedSubmit(true);
+
+    if (!trimmedUsername) {
+      return;
+    }
+
+    if (trimmedUsername.length < 3) {
+      return;
+    }
+
+    onSubmit();
+  }
+
+  function handleUsernameChange(value: string) {
+    onUsernameChange(value);
+  }
+
   return (
     <div className="w-full max-w-sm rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-      <h2 className="mb-6 text-center text-3xl font-bold text-[#222222]">{title}</h2>
+      <h2 className="mb-6 text-center text-3xl font-bold text-[#222222]">
+        {title}
+      </h2>
 
       <div className="flex flex-col gap-4">
         {showRoomCode && (
           <>
             {isRoomCodeLocked ? (
               <div className="rounded-2xl bg-[#FAF7F2] p-4 text-center">
-                <p className="text-sm text-gray-500">{roomCodePlaceholder}</p>
+                <p className="text-sm text-gray-500">
+                  {roomCodePlaceholder}
+                </p>
 
-                <h2 className="mt-1 text-3xl font-bold text-[#FF7F5C]">{roomCode}</h2>
+                <h2 className="mt-1 text-3xl font-bold text-[#FF7F5C]">
+                  {roomCode}
+                </h2>
               </div>
             ) : (
               <input
@@ -58,18 +107,26 @@ export function RoomForm({
 
         <input
           value={username}
-          onChange={(e) => onUsernameChange(e.target.value)}
+          onChange={(e) => handleUsernameChange(e.target.value)}
           placeholder={usernamePlaceholder}
           className="rounded-2xl border border-gray-200 bg-white p-4 text-[#222222] outline-none placeholder:text-gray-400"
         />
 
-        {error && <p className="text-center text-sm text-red-500">{error}</p>}
+        {(error || usernameError) && (
+          <p className="text-center text-sm text-red-500">
+            {error || usernameError}
+          </p>
+        )}
 
         <button
-          onClick={onSubmit}
-          className="rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white active:scale-95"
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className="rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white active:scale-95 disabled:opacity-70"
         >
-          {continueText}
+          <span className="flex items-center justify-center gap-2">
+            {isLoading && <LoadingSpinner size="sm" />}
+            {isLoading ? loadingText || continueText : continueText}
+          </span>
         </button>
       </div>
     </div>

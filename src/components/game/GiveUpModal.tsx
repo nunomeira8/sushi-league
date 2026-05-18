@@ -1,5 +1,7 @@
 'use client';
 
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+
 import { translations } from '@/i18n/translations';
 
 type Props = {
@@ -7,12 +9,14 @@ type Props = {
 
   isOpen: boolean;
 
+  isLoading?: boolean;
+
   onClose: () => void;
 
   onConfirm: () => void;
 };
 
-export function GiveUpModal({ language, isOpen, onClose, onConfirm }: Props) {
+export function GiveUpModal({ language, isOpen, isLoading = false, onClose, onConfirm }: Props) {
   const t = translations[language];
 
   if (!isOpen) {
@@ -27,15 +31,27 @@ export function GiveUpModal({ language, isOpen, onClose, onConfirm }: Props) {
         <p className="mt-4 text-center leading-relaxed text-gray-500">{t.giveUpDescription}</p>
 
         <div className="mt-8 flex flex-col gap-3">
-          <button onClick={onClose} className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white">
+          <button
+            onClick={onClose}
+            disabled={isLoading}
+            className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white transition active:scale-95 disabled:opacity-60"
+          >
             {t.keepEating}
           </button>
 
           <button
             onClick={onConfirm}
-            className="mx-auto rounded-2xl border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-500"
+            disabled={isLoading}
+            className="mx-auto rounded-2xl border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-500 transition active:scale-95 disabled:opacity-60"
           >
-            {t.yesGiveUp}
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <LoadingSpinner size="sm" />
+                {t.finishingGame}
+              </span>
+            ) : (
+              t.yesGiveUp
+            )}
           </button>
         </div>
       </div>

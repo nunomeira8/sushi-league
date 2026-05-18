@@ -21,6 +21,7 @@ import { QrCodeModal } from '../QrCodeModal';
 import { SettingsModal } from '../SettingsModal';
 
 import { getLanguage } from '@/lib/language';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function RoomPage() {
   const params = useParams();
@@ -47,6 +48,11 @@ export default function RoomPage() {
   const [enabledCategories, setEnabledCategories] = useState<string[]>([]);
 
   const [settingsError, setSettingsError] = useState('');
+
+  const [copied, setCopied] = useState(false);
+
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [isStartingGame, setIsStartingGame] = useState(false);
 
   async function fetchRoomData() {
     const { data: roomData } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
@@ -170,26 +176,29 @@ export default function RoomPage() {
   }
 
   async function saveSettings() {
-    if (!room) return;
+    if (!room || isSavingSettings) return;
 
     if (enabledCategories.length === 0) {
-      setSettingsError('Select at least one category');
-
+      setSettingsError(t.atLeastOneCategory);
       return;
     }
 
     setSettingsError('');
+    setIsSavingSettings(true);
 
-    await supabase
-      .from('rooms')
-      .update({
-        game_duration: gameDuration,
+    try {
+      await supabase
+        .from('rooms')
+        .update({
+          game_duration: gameDuration,
+          enabled_categories: enabledCategories,
+        })
+        .eq('id', room.id);
 
-        enabled_categories: enabledCategories,
-      })
-      .eq('id', room.id);
-
-    setIsSettingsOpen(false);
+      setIsSettingsOpen(false);
+    } finally {
+      setIsSavingSettings(false);
+    }
   }
 
   if (!room) {
@@ -199,40 +208,41 @@ export default function RoomPage() {
   const allPlayersReady = players.length > 0 && players.every((player) => player.is_ready);
 
   async function startGame() {
-    if (!room) return;
+    if (!room || isStartingGame) return;
 
-    const startedAt = new Date();
+    setIsStartingGame(true);
 
-    const endedAt = new Date(startedAt.getTime() + room.game_duration * 60 * 1000);
+    try {
+      const startedAt = new Date();
+      const endedAt = new Date(startedAt.getTime() + room.game_duration * 60 * 1000);
 
-    await supabase
-      .from('rooms')
-      .update({
-        is_started: true,
+      await supabase
+        .from('rooms')
+        .update({
+          is_started: true,
+          started_at: startedAt.toISOString(),
+          ended_at: endedAt.toISOString(),
+        })
+        .eq('id', room.id);
 
-        started_at: startedAt.toISOString(),
+      const { data: playersData } = await supabase.from('players').select('*').eq('room_id', room.id);
 
-        ended_at: endedAt.toISOString(),
-      })
-      .eq('id', room.id);
+      if (playersData) {
+        const scoresToInsert = playersData.flatMap((player) =>
+          room.enabled_categories.map((category) => ({
+            player_id: player.id,
+            category,
+            score: 0,
+          })),
+        );
 
-    const { data: playersData } = await supabase.from('players').select('*').eq('room_id', room.id);
+        await supabase.from('player_scores').insert(scoresToInsert);
+      }
 
-    if (playersData) {
-      const scoresToInsert = playersData.flatMap((player) =>
-        room.enabled_categories.map((category) => ({
-          player_id: player.id,
-
-          category,
-
-          score: 0,
-        })),
-      );
-
-      await supabase.from('player_scores').insert(scoresToInsert);
+      router.push(`/room/${room.code}/game`);
+    } finally {
+      setIsStartingGame(false);
     }
-
-    router.push(`/room/${room.code}/game`);
   }
 
   return (
@@ -243,8 +253,27 @@ export default function RoomPage() {
             <div>
               <p className="text-sm text-gray-500">{t.roomCode}</p>
 
-              <button onClick={() => navigator.clipboard.writeText(room.code)} className="transition active:scale-95">
+              <button
+                onClick={async () => {
+                  await navigator.clipboard.writeText(room.code);
+
+                  setCopied(true);
+
+                  setTimeout(() => {
+                    setCopied(false);
+                  }, 1500);
+                }}
+                className="transition active:scale-95"
+              >
                 <h1 className="text-4xl font-bold text-[#FF7F5C]">{room.code}</h1>
+
+                <p
+                  className={`text-xs font-medium text-[#6BA368] transition-opacity ${
+                    copied ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  {t.copied}
+                </p>
               </button>
             </div>
 
@@ -295,15 +324,18 @@ export default function RoomPage() {
 
           <div className="mt-6">
             {!allPlayersReady && (
-              <button
-                onClick={toggleReady}
-                className={`w-full rounded-2xl py-4 text-lg font-semibold text-white transition active:scale-95 ${
-                  currentPlayer?.is_ready ? 'bg-[#6BA368]' : 'bg-[#FF7F5C]'
-                }`}
-              >
-                {currentPlayer?.is_ready ? t.ready : t.notReady}
-              </button>
-            )}
+  <button
+    onClick={toggleReady}
+    disabled={currentPlayer?.is_ready}
+    className={`w-full rounded-2xl py-4 text-lg font-semibold text-white shadow-sm transition active:scale-95 ${
+      currentPlayer?.is_ready
+        ? 'cursor-default bg-[#6BA368]'
+        : 'bg-[#FF7F5C] hover:brightness-95'
+    }`}
+  >
+    {currentPlayer?.is_ready ? `✅ ${t.readyConfirmed}` : t.markReady}
+  </button>
+)}
 
             {currentPlayer?.is_admin && (
               <button
@@ -319,9 +351,13 @@ export default function RoomPage() {
             {allPlayersReady && currentPlayer?.is_admin && (
               <button
                 onClick={startGame}
-                className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95"
+                disabled={isStartingGame}
+                className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95 disabled:opacity-60"
               >
-                Start
+                <span className="flex items-center justify-center gap-2">
+                  {isStartingGame && <LoadingSpinner size="sm" />}
+                  {isStartingGame ? t.startingGame : t.start}
+                </span>
               </button>
             )}
           </div>
@@ -340,6 +376,7 @@ export default function RoomPage() {
         isOpen={isSettingsOpen}
         duration={gameDuration}
         categories={enabledCategories}
+        isSaving={isSavingSettings}
         onClose={() => setIsSettingsOpen(false)}
         onDurationChange={setGameDuration}
         onToggleCategory={toggleCategory}
