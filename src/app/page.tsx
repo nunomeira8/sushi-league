@@ -11,6 +11,7 @@ import { Language } from '@/types/language';
 
 import { getLanguage, saveLanguage } from '@/lib/language';
 import { HowToPlayModal } from '@/components/home/HowToPlayModal';
+import { FeedbackModal } from '@/components/home/FeedbackModal';
 
 import packageJson from '../../package.json';
 
@@ -18,6 +19,8 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>('en');
 
   const [isHowToOpen, setIsHowToOpen] = useState(false);
+
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   const t = translations[language];
 
@@ -51,8 +54,23 @@ export default function Home() {
         <WelcomeSection title={t.welcome} />
         <ActionCard createRoomText={t.createRoom} joinRoomText={t.joinRoom} />
         <HowToPlayModal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)} t={t} />
+        <FeedbackModal
+          isOpen={isFeedbackOpen}
+          onClose={() => setIsFeedbackOpen(false)}
+          t={t}
+          language={language}
+          version={packageJson.version}
+        />
       </div>
-      <p className="pb-6 text-sm text-gray-400">v{packageJson.version}</p>
+      <div className="flex items-center gap-2 pb-6 text-sm text-gray-400">
+        <span>v{packageJson.version}</span>
+
+        <span>•</span>
+
+        <button onClick={() => setIsFeedbackOpen(true)} className="font-medium text-[#FF7F5C]">
+          {t.feedbackSupport}
+        </button>
+      </div>
     </main>
   );
 }
