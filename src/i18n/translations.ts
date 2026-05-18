@@ -70,6 +70,7 @@ export const translations = {
       'Yes, I am done',
     keepEating:
       'No, I can still eat',
+    finishingGame: 'Finishing...',
     waitingTitle:
       'The sushi battlefield continues...',
     stillEating:
@@ -206,6 +207,7 @@ export const translations = {
       'Sim, já chega',
     keepEating:
       'Não, ainda aguento',
+    finishingGame: 'A terminar...',
     waitingTitle:
       'A batalha do sushi continua...',
     stillEating:
@@ -342,6 +344,7 @@ export const translations = {
       'Oui, j’abandonne',
     keepEating:
       'Non, je continue',
+    finishingGame: 'Fin du jeu...',
     waitingTitle:
       'La bataille du sushi continue...',
     stillEating:
