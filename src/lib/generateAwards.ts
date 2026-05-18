@@ -116,5 +116,9 @@ export async function generateAwards(roomId: string) {
         is_final_winner: true,
     });
 
-    await supabase.from('room_awards').insert(awardsToInsert);
+    await supabase
+        .from('room_awards')
+        .upsert(awardsToInsert, {
+            onConflict: 'room_id,category',
+        });
 }
