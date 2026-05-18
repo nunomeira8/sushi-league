@@ -100,6 +100,32 @@ export const translations = {
     winnerDescription:
       'At the end, category winners are revealed… and finally the Sushi League Champion.',
     calculatingWinners: 'Calculating winners...',
+    //Feedback&Support
+    feedbackSupport: 'Feedback & Support',
+    feedbackTitle: 'Feedback / Support',
+    feedbackSubtitle:
+      'Help us make Sushi League better than your next sushi order 🍣',
+    feedbackNamePlaceholder: 'Your name (optional)',
+    feedbackRoomCodePlaceholder: 'Room code (optional)',
+    feedbackMessagePlaceholder:
+      'Tell us what happened, what you loved, hated, or what would make Sushi League even more fun...',
+    feedbackTypeFeedback: '❤️ Feedback',
+    feedbackTypeBug: '🐛 Bug Report',
+    feedbackTypeSuggestion: '💡 Suggestion',
+    feedbackTypeSupport: '🆘 Support',
+    feedbackPlaceholder_feedback:
+      'What did you enjoy? What could be improved?',
+    feedbackPlaceholder_bug:
+      'What happened? What did you expect to happen?',
+    feedbackPlaceholder_suggestion:
+      'What would make Sushi League even better?',
+    feedbackPlaceholder_support:
+      'Need help? Tell us what’s happening.',
+    feedbackMessageRequired: 'Please write a message before sending.',
+    feedbackSend: 'Send feedback 🍣',
+    feedbackSuccessTitle: 'Thank you! ❤️',
+    feedbackSuccessMessage:
+      'Your feedback has been sent. You may have just improved Sushi League forever.',
   },
 
   pt: {
@@ -201,6 +227,32 @@ export const translations = {
     winnerDescription:
       'No fim aparecem os vencedores de cada categoria e o campeão final da Sushi League.',
     calculatingWinners: 'A calcular os vencedores...',
+    //Feedback&Support
+    feedbackSupport: 'Feedback & Suporte',
+    feedbackTitle: 'Feedback / Suporte',
+    feedbackSubtitle:
+      'Ajuda-nos a tornar a Sushi League melhor que o teu próximo pedido de sushi 🍣',
+    feedbackNamePlaceholder: 'O teu nome (opcional)',
+    feedbackRoomCodePlaceholder: 'Código da sala (opcional)',
+    feedbackMessagePlaceholder:
+      'Conta-nos o que aconteceu, o que gostaste, o que odiaste ou o que tornaria a Sushi League ainda mais divertida...',
+    feedbackTypeFeedback: '❤️ Feedback',
+    feedbackTypeBug: '🐛 Bug',
+    feedbackTypeSuggestion: '💡 Sugestão',
+    feedbackTypeSupport: '🆘 Ajuda',
+    feedbackPlaceholder_feedback:
+      'O que gostaste? O que podia ser melhorado?',
+    feedbackPlaceholder_bug:
+      'O que aconteceu? O que esperavas que acontecesse?',
+    feedbackPlaceholder_suggestion:
+      'O que tornaria a Sushi League ainda melhor?',
+    feedbackPlaceholder_support:
+      'Precisas de ajuda? Conta-nos o que se passa.',
+    feedbackMessageRequired: 'Escreve uma mensagem antes de enviar.',
+    feedbackSend: 'Enviar feedback 🍣',
+    feedbackSuccessTitle: 'Obrigado! ❤️',
+    feedbackSuccessMessage:
+      'O teu feedback foi enviado. Talvez tenhas acabado de melhorar a Sushi League para sempre.',
   },
 
   fr: {
@@ -281,23 +333,20 @@ export const translations = {
     resultsIn: 'Résultats dans',
     howToPlay: 'Comment Jouer',
     howToPlayButton: "OK... j'ai faim 🍣",
+    goalTitle: 'Objectif',
     goalDescription:
       'Mange des sushis, compte ce que tu manges et essaie d’obtenir le meilleur score.',
     joinRoomDescription:
       'Crée une salle ou rejoins-en une avec un code ou un QR Code. Choisis ton nom et rejoins tes amis.',
-
     chooseBattleTitle: 'Configurer la Partie',
     chooseBattleDescription:
       'L’admin choisit la durée du jeu et les catégories qui compteront.',
-
     readyTitle: 'Préparez-vous',
     readyDescription:
       'Tous les joueurs doivent appuyer sur READY avant le début de la bataille.',
-
     gameTitle: 'À Table 🍣',
     gameDescription:
       'Pendant le jeu, utilise les compteurs pour enregistrer ce que tu manges dans chaque catégorie.',
-
     htp_giveUpTitle: 'Quand Tu N’en Peux Plus',
     htp_giveUpDescription:
       'Tu as terminé avant la fin ? Indique que tu as fini et attends les autres joueurs.',
@@ -307,5 +356,31 @@ export const translations = {
       'À la fin, les gagnants de chaque catégorie sont révélés… puis le grand champion de Sushi League.',
     calculatingWinners:
       'Calcul des gagnants...',
+    //Feedback&Support
+    feedbackSupport: 'Feedback & Support',
+    feedbackTitle: 'Feedback / Support',
+    feedbackSubtitle:
+      'Aide-nous à rendre Sushi League meilleure que ta prochaine commande de sushi 🍣',
+    feedbackNamePlaceholder: 'Ton nom (optionnel)',
+    feedbackRoomCodePlaceholder: 'Code de la salle (optionnel)',
+    feedbackMessagePlaceholder:
+      'Dis-nous ce qui s’est passé, ce que tu as aimé, détesté, ou ce qui rendrait Sushi League encore plus fun...',
+    feedbackTypeFeedback: '❤️ Feedback',
+    feedbackTypeBug: '🐛 Bug',
+    feedbackTypeSuggestion: '💡 Suggestion',
+    feedbackTypeSupport: '🆘 Aide',
+    feedbackPlaceholder_feedback:
+      'Qu’est-ce que tu as aimé ? Qu’est-ce qui pourrait être amélioré ?',
+    feedbackPlaceholder_bug:
+      'Que s’est-il passé ? Que pensais-tu qu’il allait se passer ?',
+    feedbackPlaceholder_suggestion:
+      'Qu’est-ce qui rendrait Sushi League encore meilleure ?',
+    feedbackPlaceholder_support:
+      'Besoin d’aide ? Dis-nous ce qui se passe.',
+    feedbackMessageRequired: 'Écris un message avant d’envoyer.',
+    feedbackSend: 'Envoyer le feedback 🍣',
+    feedbackSuccessTitle: 'Merci ! ❤️',
+    feedbackSuccessMessage:
+      'Ton feedback a été envoyé. Tu viens peut-être d’améliorer Sushi League pour toujours.',
   },
 } satisfies Record<Language, Record<string, string>>
