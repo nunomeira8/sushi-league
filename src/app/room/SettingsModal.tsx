@@ -4,6 +4,8 @@ import { Minus, Plus } from 'lucide-react';
 
 import { translations } from '@/i18n/translations';
 
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+
 type Props = {
   language: 'en' | 'pt' | 'fr';
 
@@ -12,6 +14,8 @@ type Props = {
   duration: number;
 
   categories: string[];
+
+  isSaving?: boolean;
 
   onClose: () => void;
 
@@ -31,6 +35,7 @@ export function SettingsModal({
   isOpen,
   duration,
   categories,
+  isSaving = false,
   onClose,
   onDurationChange,
   onToggleCategory,
@@ -44,23 +49,16 @@ export function SettingsModal({
   }
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/70 px-4 py-6"
-    >
+    <div onClick={onClose} className="fixed inset-0 z-50 overflow-y-auto bg-black/70 px-4 py-6">
       <div className="flex min-h-full items-center justify-center">
         <div
           onClick={(e) => e.stopPropagation()}
           className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-[32px] bg-white p-5 shadow-2xl sm:p-6"
         >
-          <h2 className="mb-5 text-xl font-bold text-[#222222] sm:mb-6 sm:text-2xl">
-            {t.settings}
-          </h2>
+          <h2 className="mb-5 text-xl font-bold text-[#222222] sm:mb-6 sm:text-2xl">{t.settings}</h2>
 
           <div className="mb-6 sm:mb-8">
-            <p className="mb-3 text-sm font-semibold text-gray-500">
-              {t.gameDuration}
-            </p>
+            <p className="mb-3 text-sm font-semibold text-gray-500">{t.gameDuration}</p>
 
             <div className="flex items-center justify-between rounded-2xl bg-[#FAF7F2] p-4">
               <button
@@ -71,9 +69,7 @@ export function SettingsModal({
               </button>
 
               <div className="text-center">
-                <p className="text-2xl font-bold text-[#FF7F5C] sm:text-3xl">
-                  {duration}
-                </p>
+                <p className="text-2xl font-bold text-[#FF7F5C] sm:text-3xl">{duration}</p>
 
                 <p className="text-sm text-gray-500">{t.minutes}</p>
               </div>
@@ -92,22 +88,13 @@ export function SettingsModal({
               const enabled = categories.includes(category);
 
               return (
-                <div
-                  key={category}
-                  className="rounded-2xl bg-[#FAF7F2] p-4"
-                >
+                <div key={category} className="rounded-2xl bg-[#FAF7F2] p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-[#222222]">
-                        {t[category as keyof typeof t]}
-                      </p>
+                      <p className="font-semibold text-[#222222]">{t[category as keyof typeof t]}</p>
 
                       <p className="mt-1 text-sm leading-relaxed text-gray-500">
-                        {
-                          t[
-                            `${category}Description` as keyof typeof t
-                          ]
-                        }
+                        {t[`${category}Description` as keyof typeof t]}
                       </p>
                     </div>
 
@@ -129,17 +116,17 @@ export function SettingsModal({
             })}
           </div>
 
-          {error && (
-            <p className="mt-4 text-center text-sm font-medium text-red-500">
-              {error}
-            </p>
-          )}
+          {error && <p className="mt-4 text-center text-sm font-medium text-red-500">{error}</p>}
 
           <button
             onClick={onSave}
-            className="mt-5 w-full rounded-2xl bg-[#FF7F5C] py-4 text-base font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95 sm:text-lg"
+            disabled={isSaving}
+            className="mt-5 w-full rounded-2xl bg-[#FF7F5C] py-4 text-base font-semibold text-white shadow-sm transition hover:brightness-95 active:scale-95 disabled:opacity-60 sm:text-lg"
           >
-            {t.save}
+            <span className="flex items-center justify-center gap-2">
+              {isSaving && <LoadingSpinner size="sm" />}
+              {isSaving ? t.savingSettings : t.save}
+            </span>
           </button>
         </div>
       </div>
