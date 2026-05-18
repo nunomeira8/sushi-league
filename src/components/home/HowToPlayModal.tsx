@@ -12,7 +12,7 @@ export function HowToPlayModal({ isOpen, onClose, t }: Props) {
   }
 
   return (
-    <button onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-4">
       <div
         onClick={(e) => e.stopPropagation()}
         className="flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-[32px] bg-white shadow-2xl"
@@ -74,6 +74,6 @@ export function HowToPlayModal({ isOpen, onClose, t }: Props) {
           </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
