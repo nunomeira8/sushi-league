@@ -28,6 +28,8 @@ export default function AwardsPage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [hasReachedEnd, setHasReachedEnd] = useState(false);
+
   const categoryOrder = ['starters', 'sushi', 'sashimi', 'temaki', 'hot_dishes', 'final_winner'];
 
   const CATEGORY_META: Record<
@@ -39,33 +41,31 @@ export default function AwardsPage() {
   > = {
     starters: {
       emoji: '🥟',
-      title: `${t.starters} King`,
+      title: t.startersAwardTitle,
     },
 
     sushi: {
       emoji: '🍣',
-      title: `${t.sushi} Monster`,
+      title: t.sushiAwardTitle,
     },
 
     sashimi: {
       emoji: '🐟',
-      title: `${t.sashimi} Beast`,
+      title: t.sashimiAwardTitle,
     },
 
     temaki: {
       emoji: '🌯',
-      title: `${t.temaki} Destroyer`,
+      title: t.temakiAwardTitle,
     },
 
     hot_dishes: {
       emoji: '🍜',
-      title: `${t.hot_dishes} Warrior`,
+      title: t.hotDishesAwardTitle,
     },
   };
 
   async function fetchAwards() {
-    setIsLoading(true);
-
     const { data: room } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
     if (!room) {
@@ -104,14 +104,27 @@ export default function AwardsPage() {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => {
         if (prev >= awards.length - 1) {
+          setHasReachedEnd(true);
           return prev;
         }
 
-        return prev + 1;
+        const next = prev + 1;
+
+        if (next === awards.length - 1) {
+          setHasReachedEnd(true);
+        }
+
+        return next;
       });
-    }, 4000);
+    }, 4500);
 
     return () => clearInterval(interval);
+  }, [awards]);
+
+  useEffect(() => {
+    if (awards.length === 1) {
+      setHasReachedEnd(true);
+    }
   }, [awards]);
 
   if (isLoading || !awards.length) {
@@ -132,31 +145,75 @@ export default function AwardsPage() {
 
   const award = awards[currentSlide];
 
+  const isLastSlide = currentSlide === awards.length - 1;
+
   function nextSlide() {
-    setCurrentSlide((prev) => Math.min(prev + 1, awards.length - 1));
+    setCurrentSlide((prev) => {
+      const next = Math.min(prev + 1, awards.length - 1);
+
+      if (next === awards.length - 1) {
+        setHasReachedEnd(true);
+      }
+
+      return next;
+    });
+  }
+
+  function previousSlide() {
+    setCurrentSlide((prev) => Math.max(prev - 1, 0));
   }
 
   return (
-    <main onClick={nextSlide} className="flex min-h-[100dvh] flex-col bg-[#FAF7F2] px-6 py-8">
-      {!award.is_final_winner ? (
-        <AwardSlide
-          emoji={CATEGORY_META[award.category]?.emoji}
-          title={CATEGORY_META[award.category]?.title}
-          winner={award.winner_player_name}
-          winnerScore={award.winner_score}
-          leaderboard={award.leaderboard_json}
-        />
-      ) : (
-        <FinalWinnerSlide winner={award.leaderboard_json[0]} leaderboard={award.leaderboard_json} />
-      )}
+    <main className="flex min-h-[100dvh] flex-col bg-[#FAF7F2] px-6 py-8">
+      <div onClick={nextSlide} className="flex flex-1 flex-col">
+        {!award.is_final_winner ? (
+          <AwardSlide
+            emoji={CATEGORY_META[award.category]?.emoji}
+            title={CATEGORY_META[award.category]?.title}
+            winner={award.winner_player_name}
+            winnerScore={award.winner_score}
+            leaderboard={award.leaderboard_json}
+            winnerLabel={t.winner}
+            leaderboardLabel={t.leaderboard}
+          />
+        ) : (
+          <FinalWinnerSlide
+            winner={award.leaderboard_json[0]}
+            leaderboard={award.leaderboard_json}
+            title={t.lastManStanding}
+            finalRankingLabel={t.finalRanking}
+            pointsLabel={t.points}
+          />
+        )}
+      </div>
 
-      <div className="mt-8 flex justify-center gap-2">
+      <div className="mt-6 flex justify-center gap-2">
         {awards.map((_, index) => (
           <div
             key={index}
             className={`h-2 w-2 rounded-full ${index === currentSlide ? 'bg-[#FF7F5C]' : 'bg-gray-300'}`}
           />
         ))}
+      </div>
+
+      <div className="mt-5 flex gap-3">
+        {hasReachedEnd && (
+          <button
+            onClick={previousSlide}
+            disabled={currentSlide === 0}
+            className="flex-1 rounded-2xl border border-gray-200 bg-white py-3 text-sm font-semibold text-[#222222] transition active:scale-95 disabled:text-gray-300"
+          >
+            {t.previousAward}
+          </button>
+        )}
+
+        <button
+          onClick={nextSlide}
+          disabled={isLastSlide}
+          className="flex-1 rounded-2xl border border-[#FF7F5C] bg-white py-3 text-sm font-semibold text-[#FF7F5C] transition active:scale-95 disabled:border-gray-200 disabled:text-gray-400"
+        >
+          {isLastSlide ? t.awardsFinished : t.nextAward}
+        </button>
       </div>
     </main>
   );

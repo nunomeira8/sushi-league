@@ -138,6 +138,20 @@ export const translations = {
     feedbackSuccessTitle: 'Thank you! ❤️',
     feedbackSuccessMessage:
       'Your feedback has been sent. You may have just improved Sushi League forever.',
+    //Awards
+    winner: 'Winner',
+    leaderboard: 'Leaderboard',
+    finalRanking: 'Final Ranking',
+    lastManStanding: 'Last Man Standing',
+    points: 'pts',
+    previousAward: 'Previous Award',
+    nextAward: 'Next Award',
+    awardsFinished: 'Awards Finished',
+    startersAwardTitle: 'Starters King',
+    sushiAwardTitle: 'Sushi Monster',
+    sashimiAwardTitle: 'Sashimi Beast',
+    temakiAwardTitle: 'Temaki Destroyer',
+    hotDishesAwardTitle: 'Hot Dish Warrior',
   },
 
   pt: {
@@ -277,6 +291,20 @@ export const translations = {
     feedbackSuccessTitle: 'Obrigado! ❤️',
     feedbackSuccessMessage:
       'O teu feedback foi enviado. Talvez tenhas acabado de melhorar a Sushi League para sempre.',
+    //Awards
+    winner: 'Vencedor',
+    leaderboard: 'Classificação',
+    finalRanking: 'Classificação Final',
+    lastManStanding: 'Campeão da Sushi League',
+    points: 'pts',
+    previousAward: 'Prémio Anterior',
+    nextAward: 'Próximo Prémio',
+    awardsFinished: 'Prémios Terminados',
+    startersAwardTitle: 'Rei das Entradas',
+    sushiAwardTitle: 'Monstro do Sushi',
+    sashimiAwardTitle: 'Besta do Sashimi',
+    temakiAwardTitle: 'Destruidor de Temakis',
+    hotDishesAwardTitle: 'Guerreiro dos Pratos Quentes',
   },
 
   fr: {
@@ -418,5 +446,19 @@ export const translations = {
     feedbackSuccessTitle: 'Merci ! ❤️',
     feedbackSuccessMessage:
       'Ton feedback a été envoyé. Tu viens peut-être d’améliorer Sushi League pour toujours.',
+    // Awards
+    winner: 'Gagnant',
+    leaderboard: 'Classement',
+    finalRanking: 'Classement Final',
+    lastManStanding: 'Champion de Sushi League',
+    points: 'pts',
+    previousAward: 'Prix Précédent',
+    nextAward: 'Prix Suivant',
+    awardsFinished: 'Prix Terminés',
+    startersAwardTitle: 'Roi des Entrées',
+    sushiAwardTitle: 'Monstre du Sushi',
+    sashimiAwardTitle: 'Bête du Sashimi',
+    temakiAwardTitle: 'Destructeur de Temakis',
+    hotDishesAwardTitle: 'Guerrier des Plats Chauds',
   },
 } satisfies Record<Language, Record<string, string>>
