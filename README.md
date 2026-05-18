@@ -49,7 +49,7 @@ Choose how long the match lasts.
 #### 🍱 Categories
 Enable the categories that will count during the game:
 
-- **Entradas** → starters like tempura, sesame balls, spring rolls, crepes, etc.
+- **Starters** → starters like tempura, sesame balls, spring rolls, crepes, etc.
 - **Sushi** → any sushi piece (nigiri, gunkan, hosomaki, uramaki...)
 - **Sashimi** → any sashimi
 - **Temaki** → any temaki
