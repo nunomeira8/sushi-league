@@ -17,6 +17,8 @@ export const translations = {
     continue: 'Continue',
     roomNotFound: 'Room not found',
     usernameTaken: 'Username already taken',
+    usernameRequired: 'Please add a name',
+    usernameMinLength: 'Name must have at least 3 characters',
     kicked: 'You were removed from the room',
     notAllowed: 'Not allowed to join this room',
     inviteFriends:
@@ -154,6 +156,8 @@ export const translations = {
     continue: 'Continuar',
     roomNotFound: 'Sala não encontrada',
     usernameTaken: 'Nome já está em uso',
+    usernameRequired: 'Por favor adiciona um nome',
+    usernameMinLength: 'O nome tem de ter pelo menos 3 caracteres',
     kicked: 'Foste removido da sala',
     notAllowed: 'Não tens permissão para entrar nesta sala',
     inviteFriends:
@@ -291,6 +295,8 @@ export const translations = {
     continue: 'Continuer',
     roomNotFound: 'Salle introuvable',
     usernameTaken: 'Nom déjà utilisé',
+    usernameRequired: 'Ajoute un nom, s’il te plaît',
+    usernameMinLength: 'Le nom doit avoir au moins 3 caractères',
     kicked: 'Vous avez été exclu de la salle',
     notAllowed: "Vous n'êtes pas autorisé à rejoindre cette salle",
     inviteFriends:
