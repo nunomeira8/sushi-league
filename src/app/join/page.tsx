@@ -124,6 +124,8 @@ export default function JoinPage() {
         roomCode={roomCode}
         isLoading={isJoining}
         loadingText={t.joiningRoom}
+        usernameRequiredError={t.usernameRequired}
+        usernameMinLengthError={t.usernameMinLength}
         onUsernameChange={setUsername}
         onRoomCodeChange={setRoomCode}
         onSubmit={handleJoinRoom}

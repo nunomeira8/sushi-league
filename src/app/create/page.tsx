@@ -89,6 +89,8 @@ export default function CreatePage() {
         roomCode=""
         isLoading={isCreating}
         loadingText={t.creatingRoom}
+        usernameRequiredError={t.usernameRequired}
+        usernameMinLengthError={t.usernameMinLength}
         onUsernameChange={setUsername}
         onRoomCodeChange={() => {}}
         onSubmit={handleCreateRoom}
