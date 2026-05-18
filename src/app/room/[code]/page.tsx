@@ -48,6 +48,8 @@ export default function RoomPage() {
 
   const [settingsError, setSettingsError] = useState('');
 
+  const [copied, setCopied] = useState(false);
+
   async function fetchRoomData() {
     const { data: roomData } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
@@ -173,7 +175,7 @@ export default function RoomPage() {
     if (!room) return;
 
     if (enabledCategories.length === 0) {
-      setSettingsError('Select at least one category');
+      setSettingsError(t.atLeastOneCategory);
 
       return;
     }
@@ -243,8 +245,27 @@ export default function RoomPage() {
             <div>
               <p className="text-sm text-gray-500">{t.roomCode}</p>
 
-              <button onClick={() => navigator.clipboard.writeText(room.code)} className="transition active:scale-95">
+              <button
+                onClick={async () => {
+                  await navigator.clipboard.writeText(room.code);
+
+                  setCopied(true);
+
+                  setTimeout(() => {
+                    setCopied(false);
+                  }, 1500);
+                }}
+                className="transition active:scale-95"
+              >
                 <h1 className="text-4xl font-bold text-[#FF7F5C]">{room.code}</h1>
+
+                <p
+                  className={`text-xs font-medium text-[#6BA368] transition-opacity ${
+                    copied ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  {t.copied}
+                </p>
               </button>
             </div>
 
