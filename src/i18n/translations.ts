@@ -11,7 +11,9 @@ export const translations = {
     start: 'Start',
     players: 'Players',
     createRoomTitle: 'Create a Room',
+    creatingRoom: 'Creating room...',
     joinRoomTitle: 'Join a Room',
+    joiningRoom: 'Joining room...',
     continue: 'Continue',
     roomNotFound: 'Room not found',
     usernameTaken: 'Username already taken',
@@ -26,9 +28,13 @@ export const translations = {
     you: 'You',
     ready: 'Ready',
     notReady: 'Not Ready',
+    markReady: 'I’m Ready 🍣',
+    readyConfirmed: 'Ready!',
     waitingPlayers: 'Waiting for players...',
     settings: 'Settings',
     save: 'Save',
+    savingSettings: 'Saving settings...',
+    startingGame: 'Starting game...',
     gameDuration: 'Game Duration',
     minutes: 'minutes',
     starters: 'Starters',
@@ -64,6 +70,7 @@ export const translations = {
       'Yes, I am done',
     keepEating:
       'No, I can still eat',
+    finishingGame: 'Finishing...',
     waitingTitle:
       'The sushi battlefield continues...',
     stillEating:
@@ -125,6 +132,7 @@ export const translations = {
       'Need help? Tell us what’s happening.',
     feedbackMessageRequired: 'Please write a message before sending.',
     feedbackSend: 'Send feedback 🍣',
+    sendingFeedback: 'Sending feedback...',
     feedbackSuccessTitle: 'Thank you! ❤️',
     feedbackSuccessMessage:
       'Your feedback has been sent. You may have just improved Sushi League forever.',
@@ -140,7 +148,9 @@ export const translations = {
     start: 'Começar',
     players: 'Jogadores',
     createRoomTitle: 'Criar Sala',
+    creatingRoom: 'A criar sala...',
     joinRoomTitle: 'Entrar na Sala',
+    joiningRoom: 'A entrar na sala...',
     continue: 'Continuar',
     roomNotFound: 'Sala não encontrada',
     usernameTaken: 'Nome já está em uso',
@@ -155,9 +165,13 @@ export const translations = {
     you: 'Tu',
     ready: 'Pronto',
     notReady: 'Não Pronto',
+    markReady: 'Estou Pronto 🍣',
+    readyConfirmed: 'Pronto!',
     waitingPlayers: 'À espera dos jogadores...',
     settings: 'Definições',
     save: 'Guardar',
+    savingSettings: 'A guardar definições...',
+    startingGame: 'A começar o jogo...',
     gameDuration: 'Duração do Jogo',
     minutes: 'minutos',
     starters: 'Entradas',
@@ -193,6 +207,7 @@ export const translations = {
       'Sim, já chega',
     keepEating:
       'Não, ainda aguento',
+    finishingGame: 'A terminar...',
     waitingTitle:
       'A batalha do sushi continua...',
     stillEating:
@@ -254,6 +269,7 @@ export const translations = {
       'Precisas de ajuda? Conta-nos o que se passa.',
     feedbackMessageRequired: 'Escreve uma mensagem antes de enviar.',
     feedbackSend: 'Enviar feedback 🍣',
+    sendingFeedback: 'A enviar feedback...',
     feedbackSuccessTitle: 'Obrigado! ❤️',
     feedbackSuccessMessage:
       'O teu feedback foi enviado. Talvez tenhas acabado de melhorar a Sushi League para sempre.',
@@ -269,7 +285,9 @@ export const translations = {
     start: 'Démarrer',
     players: 'Joueurs',
     createRoomTitle: 'Créer une Salle',
+    creatingRoom: 'Création de la salle...',
     joinRoomTitle: 'Rejoindre une Salle',
+    joiningRoom: 'Entrée dans la salle...',
     continue: 'Continuer',
     roomNotFound: 'Salle introuvable',
     usernameTaken: 'Nom déjà utilisé',
@@ -284,9 +302,13 @@ export const translations = {
     you: 'Vous',
     ready: 'Prêt',
     notReady: 'Pas Prêt',
+    markReady: 'Je Suis Prêt 🍣',
+    readyConfirmed: 'Prêt !',
     waitingPlayers: 'En attente des joueurs...',
     settings: 'Paramètres',
     save: 'Sauvegarder',
+    savingSettings: 'Sauvegarde...',
+    startingGame: 'Démarrage du jeu...',
     gameDuration: 'Durée du Jeu',
     minutes: 'minutes',
     starters: 'Entrées',
@@ -322,6 +344,7 @@ export const translations = {
       'Oui, j’abandonne',
     keepEating:
       'Non, je continue',
+    finishingGame: 'Fin du jeu...',
     waitingTitle:
       'La bataille du sushi continue...',
     stillEating:
@@ -385,6 +408,7 @@ export const translations = {
       'Besoin d’aide ? Dis-nous ce qui se passe.',
     feedbackMessageRequired: 'Écris un message avant d’envoyer.',
     feedbackSend: 'Envoyer le feedback 🍣',
+    sendingFeedback: 'Envoi du feedback...',
     feedbackSuccessTitle: 'Merci ! ❤️',
     feedbackSuccessMessage:
       'Ton feedback a été envoyé. Tu viens peut-être d’améliorer Sushi League pour toujours.',

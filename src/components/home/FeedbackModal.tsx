@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 type FeedbackType = 'feedback' | 'bug' | 'suggestion' | 'support';
 
@@ -163,7 +164,11 @@ export function FeedbackModal({ isOpen, onClose, t, language, version }: Props) 
                 disabled={isSending}
                 className="w-full rounded-2xl bg-[#FF7F5C] py-4 text-lg font-semibold text-white shadow-md transition active:scale-95 disabled:opacity-60"
               >
-                {isSending ? '...' : t.feedbackSend}
+                <span className="flex items-center justify-center gap-2">
+                  {isSending && <LoadingSpinner size="sm" />}
+
+                  {isSending ? t.sendingFeedback : t.feedbackSend}
+                </span>
               </button>
             </div>
           )}

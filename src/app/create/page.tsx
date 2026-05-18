@@ -15,12 +15,16 @@ import { getLanguage, saveLanguage } from '@/lib/language';
 import { translations } from '@/i18n/translations';
 import { Language } from '@/types/language';
 
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+
 export default function CreatePage() {
   const router = useRouter();
 
   const [username, setUsername] = useState('');
 
   const [language, setLanguage] = useState<Language>('en');
+
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     setLanguage(getLanguage());
@@ -29,31 +33,39 @@ export default function CreatePage() {
   const t = translations[language];
 
   async function handleCreateRoom() {
-    const roomCode = generateRoomCode();
+    if (isCreating) return;
 
-    const { data: room } = await supabase
-      .from('rooms')
-      .insert({
-        code: roomCode,
-        name: `${username}'s room`,
-        duration: 60,
-      })
-      .select()
-      .single();
+    setIsCreating(true);
 
-    const { data: player } = await supabase
-      .from('players')
-      .insert({
-        room_id: room.id,
-        name: username,
-        is_admin: true,
-      })
-      .select()
-      .single();
+    try {
+      const roomCode = generateRoomCode();
 
-    savePlayerId(player.id);
+      const { data: room } = await supabase
+        .from('rooms')
+        .insert({
+          code: roomCode,
+          name: `${username}'s room`,
+          duration: 60,
+        })
+        .select()
+        .single();
 
-    router.push(`/room/${roomCode}`);
+      const { data: player } = await supabase
+        .from('players')
+        .insert({
+          room_id: room.id,
+          name: username,
+          is_admin: true,
+        })
+        .select()
+        .single();
+
+      savePlayerId(player.id);
+
+      router.push(`/room/${roomCode}`);
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -75,6 +87,8 @@ export default function CreatePage() {
         continueText={t.continue}
         username={username}
         roomCode=""
+        isLoading={isCreating}
+        loadingText={t.creatingRoom}
         onUsernameChange={setUsername}
         onRoomCodeChange={() => {}}
         onSubmit={handleCreateRoom}
