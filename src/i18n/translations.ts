@@ -127,6 +127,7 @@ export const translations = {
       'Need help? Tell us what’s happening.',
     feedbackMessageRequired: 'Please write a message before sending.',
     feedbackSend: 'Send feedback 🍣',
+    sendingFeedback: 'Sending feedback...',
     feedbackSuccessTitle: 'Thank you! ❤️',
     feedbackSuccessMessage:
       'Your feedback has been sent. You may have just improved Sushi League forever.',
@@ -258,6 +259,7 @@ export const translations = {
       'Precisas de ajuda? Conta-nos o que se passa.',
     feedbackMessageRequired: 'Escreve uma mensagem antes de enviar.',
     feedbackSend: 'Enviar feedback 🍣',
+    sendingFeedback: 'A enviar feedback...',
     feedbackSuccessTitle: 'Obrigado! ❤️',
     feedbackSuccessMessage:
       'O teu feedback foi enviado. Talvez tenhas acabado de melhorar a Sushi League para sempre.',
@@ -391,6 +393,7 @@ export const translations = {
       'Besoin d’aide ? Dis-nous ce qui se passe.',
     feedbackMessageRequired: 'Écris un message avant d’envoyer.',
     feedbackSend: 'Envoyer le feedback 🍣',
+    sendingFeedback: 'Envoi du feedback...',
     feedbackSuccessTitle: 'Merci ! ❤️',
     feedbackSuccessMessage:
       'Ton feedback a été envoyé. Tu viens peut-être d’améliorer Sushi League pour toujours.',
