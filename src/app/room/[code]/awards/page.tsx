@@ -372,7 +372,7 @@ export default function AwardsPage() {
 
   return (
     <main className="flex min-h-[100dvh] flex-col bg-[#FAF7F2] px-6 py-8">
-      <div onClick={nextSlide} className="flex flex-1 flex-col">
+      <div key={award.category} onClick={nextSlide} className="award-slide-shell flex flex-1 flex-col">
         {!award.is_final_winner ? (
           <AwardSlide
             emoji={CATEGORY_META[award.category].emoji}
