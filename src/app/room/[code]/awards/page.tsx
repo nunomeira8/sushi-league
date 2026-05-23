@@ -13,6 +13,10 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { translations } from '@/i18n/translations';
 
+type AwardCategory = 'starters' | 'sushi' | 'sashimi' | 'temaki' | 'hot_dishes';
+
+type AwardCategoryOrFinal = AwardCategory | 'final_winner';
+
 type AwardLeaderboardPlayer = {
   player_id: string;
   player_name: string;
@@ -25,9 +29,31 @@ type FinalLeaderboardPlayer = {
   player_id: string;
   player_name: string;
   total_score: number;
+  breakdown: Record<string, number>;
   finished_at?: number | null;
   rank?: number;
 };
+
+type BaseAward = {
+  category: AwardCategoryOrFinal;
+  winner_player_id: string | null;
+  winner_player_name: string;
+  winner_score: number;
+};
+
+type CategoryAward = BaseAward & {
+  category: AwardCategory;
+  is_final_winner: false;
+  leaderboard_json: AwardLeaderboardPlayer[];
+};
+
+type FinalAward = BaseAward & {
+  category: 'final_winner';
+  is_final_winner: true;
+  leaderboard_json: FinalLeaderboardPlayer[];
+};
+
+type RoomAward = CategoryAward | FinalAward;
 
 type AwardPlayer = {
   id: string;
@@ -60,7 +86,9 @@ function getFinalRank(leaderboard: FinalLeaderboardPlayer[], index: number) {
   return index + 1;
 }
 
-function normalizeCategoryAward(award: any, playersById: Map<string, AwardPlayer>) {
+const categoryOrder: AwardCategoryOrFinal[] = ['starters', 'sushi', 'sashimi', 'temaki', 'hot_dishes', 'final_winner'];
+
+function normalizeCategoryAward(award: RoomAward, playersById: Map<string, AwardPlayer>): RoomAward {
   if (award.is_final_winner || !Array.isArray(award.leaderboard_json)) {
     return award;
   }
@@ -110,7 +138,7 @@ function normalizeCategoryAward(award: any, playersById: Map<string, AwardPlayer
   };
 }
 
-function normalizeFinalAward(award: any, playersById: Map<string, AwardPlayer>) {
+function normalizeFinalAward(award: RoomAward, playersById: Map<string, AwardPlayer>): RoomAward {
   if (!award.is_final_winner || !Array.isArray(award.leaderboard_json)) {
     return award;
   }
@@ -155,7 +183,7 @@ function normalizeFinalAward(award: any, playersById: Map<string, AwardPlayer>) 
   };
 }
 
-function normalizeAward(award: any, playersById: Map<string, AwardPlayer>) {
+function normalizeAward(award: RoomAward, playersById: Map<string, AwardPlayer>) {
   return award.is_final_winner
     ? normalizeFinalAward(award, playersById)
     : normalizeCategoryAward(award, playersById);
@@ -177,7 +205,7 @@ export default function AwardsPage() {
 
   const t = translations[language];
 
-  const [awards, setAwards] = useState<any[]>([]);
+  const [awards, setAwards] = useState<RoomAward[]>([]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -185,10 +213,8 @@ export default function AwardsPage() {
 
   const [hasReachedEnd, setHasReachedEnd] = useState(false);
 
-  const categoryOrder = ['starters', 'sushi', 'sashimi', 'temaki', 'hot_dishes', 'final_winner'];
-
   const CATEGORY_META: Record<
-    string,
+    AwardCategory,
     {
       emoji: string;
       title: string;
@@ -220,6 +246,14 @@ export default function AwardsPage() {
     },
   };
 
+  const CATEGORY_LABELS: Record<AwardCategory, string> = {
+    starters: t.starters,
+    sushi: t.sushi,
+    sashimi: t.sashimi,
+    temaki: t.temaki,
+    hot_dishes: t.hot_dishes,
+  };
+
   async function fetchAwards() {
     const { data: room } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
@@ -238,13 +272,15 @@ export default function AwardsPage() {
       return;
     }
 
-    const playersById = new Map((players || []).map((player) => [player.id, player]));
+    const playersById = new Map<string, AwardPlayer>((players || []).map((player) => [player.id, player]));
 
-    data.sort((a, b) => {
+    const roomAwards = data as RoomAward[];
+
+    roomAwards.sort((a, b) => {
       return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
     });
 
-    setAwards(data.map((award) => normalizeAward(award, playersById)));
+    setAwards(roomAwards.map((award) => normalizeAward(award, playersById)));
     setIsLoading(false);
   }
 
@@ -307,7 +343,16 @@ export default function AwardsPage() {
 
   const isLastSlide = currentSlide === awards.length - 1;
 
-  const categoryLabel = t[award.category] || award.category;
+  const categoryLabel = !award.is_final_winner ? CATEGORY_LABELS[award.category] : award.category;
+
+  const finalWinner = award.is_final_winner
+    ? award.leaderboard_json[0] ?? {
+        player_id: award.winner_player_id ?? '',
+        player_name: award.winner_player_name,
+        total_score: award.winner_score,
+        breakdown: {},
+      }
+    : null;
 
   function nextSlide() {
     setCurrentSlide((prev) => {
@@ -330,8 +375,8 @@ export default function AwardsPage() {
       <div onClick={nextSlide} className="flex flex-1 flex-col">
         {!award.is_final_winner ? (
           <AwardSlide
-            emoji={CATEGORY_META[award.category]?.emoji}
-            title={CATEGORY_META[award.category]?.title}
+            emoji={CATEGORY_META[award.category].emoji}
+            title={CATEGORY_META[award.category].title}
             winner={award.winner_player_name}
             winnerScore={award.winner_score}
             hasWinner={award.winner_score > 0}
@@ -345,7 +390,7 @@ export default function AwardsPage() {
         ) : (
           <FinalWinnerSlide
             winner={{
-              ...award.leaderboard_json[0],
+              ...(finalWinner as FinalLeaderboardPlayer),
               player_name: award.winner_player_name,
             }}
             leaderboard={award.leaderboard_json}
