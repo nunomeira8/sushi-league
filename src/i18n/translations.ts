@@ -140,6 +140,7 @@ export const translations = {
       'Your feedback has been sent. You may have just improved Sushi League forever.',
     //Awards
     winner: 'Winner',
+    noWinner: 'No one touched {category}. The sushi survived.',
     leaderboard: 'Leaderboard',
     finalRanking: 'Final Ranking',
     lastManStanding: 'Last Man Standing',
@@ -293,6 +294,7 @@ export const translations = {
       'O teu feedback foi enviado. Talvez tenhas acabado de melhorar a Sushi League para sempre.',
     //Awards
     winner: 'Vencedor',
+    noWinner: 'Ninguem tocou em {category}. O sushi ganhou esta ronda.',
     leaderboard: 'Classificação',
     finalRanking: 'Classificação Final',
     lastManStanding: 'Campeão da Sushi League',
@@ -448,6 +450,7 @@ export const translations = {
       'Ton feedback a été envoyé. Tu viens peut-être d’améliorer Sushi League pour toujours.',
     // Awards
     winner: 'Gagnant',
+    noWinner: "Personne n'a touche a {category}. Les sushis gagnent ce round.",
     leaderboard: 'Classement',
     finalRanking: 'Classement Final',
     lastManStanding: 'Champion de Sushi League',

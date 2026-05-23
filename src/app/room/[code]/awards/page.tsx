@@ -13,6 +13,161 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { translations } from '@/i18n/translations';
 
+type AwardLeaderboardPlayer = {
+  player_id: string;
+  player_name: string;
+  score: number;
+  finished_at?: number | null;
+  rank?: number | null;
+};
+
+type FinalLeaderboardPlayer = {
+  player_id: string;
+  player_name: string;
+  total_score: number;
+  finished_at?: number | null;
+  rank?: number;
+};
+
+type AwardPlayer = {
+  id: string;
+  finished_at: number | null;
+};
+
+function getRank(leaderboard: AwardLeaderboardPlayer[], index: number) {
+  if (index === 0) return 1;
+
+  const previous = leaderboard[index - 1];
+  const current = leaderboard[index];
+
+  if (previous.score === current.score && previous.finished_at === current.finished_at) {
+    return getRank(leaderboard, index - 1);
+  }
+
+  return index + 1;
+}
+
+function getFinalRank(leaderboard: FinalLeaderboardPlayer[], index: number) {
+  if (index === 0) return 1;
+
+  const previous = leaderboard[index - 1];
+  const current = leaderboard[index];
+
+  if (previous.total_score === current.total_score && previous.finished_at === current.finished_at) {
+    return getFinalRank(leaderboard, index - 1);
+  }
+
+  return index + 1;
+}
+
+function normalizeCategoryAward(award: any, playersById: Map<string, AwardPlayer>) {
+  if (award.is_final_winner || !Array.isArray(award.leaderboard_json)) {
+    return award;
+  }
+
+  const hasWinner = award.leaderboard_json.some((player: AwardLeaderboardPlayer) => player.score > 0);
+  const leaderboard = award.leaderboard_json
+    .map((player: AwardLeaderboardPlayer) => ({
+      ...player,
+      finished_at: player.finished_at ?? playersById.get(player.player_id)?.finished_at ?? null,
+    }))
+    .sort((a: AwardLeaderboardPlayer, b: AwardLeaderboardPlayer) => {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+
+      const finishedAtA = a.finished_at ?? -1;
+      const finishedAtB = b.finished_at ?? -1;
+
+      if (!hasWinner) {
+        return a.player_name.localeCompare(b.player_name);
+      }
+
+      if (finishedAtB !== finishedAtA) {
+        return finishedAtB - finishedAtA;
+      }
+
+      return a.player_name.localeCompare(b.player_name);
+    })
+    .map((player: AwardLeaderboardPlayer, index: number, sortedLeaderboard: AwardLeaderboardPlayer[]) => ({
+      ...player,
+      rank: hasWinner ? getRank(sortedLeaderboard, index) : null,
+    }));
+
+  const winners = leaderboard.filter((player: AwardLeaderboardPlayer) => player.rank === 1);
+  const winner = winners[0];
+
+  if (hasWinner && !winner) return award;
+
+  return {
+    ...award,
+    winner_player_id: hasWinner ? (winner?.player_id ?? null) : null,
+    winner_player_name: hasWinner
+      ? winners.map((player: AwardLeaderboardPlayer) => player.player_name).join(' / ')
+      : '',
+    winner_score: hasWinner ? (winner?.score ?? 0) : 0,
+    leaderboard_json: leaderboard,
+  };
+}
+
+function normalizeFinalAward(award: any, playersById: Map<string, AwardPlayer>) {
+  if (!award.is_final_winner || !Array.isArray(award.leaderboard_json)) {
+    return award;
+  }
+
+  const leaderboard = award.leaderboard_json
+    .map((player: FinalLeaderboardPlayer) => ({
+      ...player,
+      finished_at: player.finished_at ?? playersById.get(player.player_id)?.finished_at ?? null,
+    }))
+    .sort((a: FinalLeaderboardPlayer, b: FinalLeaderboardPlayer) => {
+      if (b.total_score !== a.total_score) {
+        return b.total_score - a.total_score;
+      }
+
+      const finishedAtA = a.finished_at ?? -1;
+      const finishedAtB = b.finished_at ?? -1;
+
+      if (finishedAtB !== finishedAtA) {
+        return finishedAtB - finishedAtA;
+      }
+
+      return a.player_name.localeCompare(b.player_name);
+    })
+    .map((player: FinalLeaderboardPlayer, index: number, sortedLeaderboard: FinalLeaderboardPlayer[]) => ({
+      ...player,
+      rank: getFinalRank(sortedLeaderboard, index),
+    }));
+
+  const winners = leaderboard.filter((player: FinalLeaderboardPlayer) => player.rank === 1);
+  const winner = winners[0];
+
+  if (!winner) return award;
+
+  return {
+    ...award,
+    winner_player_id: winner.player_id,
+    winner_player_name: winners
+      .map((player: FinalLeaderboardPlayer) => player.player_name)
+      .join(' / '),
+    winner_score: winner.total_score,
+    leaderboard_json: leaderboard,
+  };
+}
+
+function normalizeAward(award: any, playersById: Map<string, AwardPlayer>) {
+  return award.is_final_winner
+    ? normalizeFinalAward(award, playersById)
+    : normalizeCategoryAward(award, playersById);
+}
+
+function formatTranslation(template: string, values: Record<string, string>) {
+  return Object.entries(values).reduce(
+    (message, [key, value]) => message.split(`{${key}}`).join(value),
+    template,
+  );
+}
+
 export default function AwardsPage() {
   const params = useParams();
 
@@ -73,18 +228,23 @@ export default function AwardsPage() {
       return;
     }
 
-    const { data } = await supabase.from('room_awards').select('*').eq('room_id', room.id).order('created_at');
+    const [{ data }, { data: players }] = await Promise.all([
+      supabase.from('room_awards').select('*').eq('room_id', room.id).order('created_at'),
+      supabase.from('players').select('id, finished_at').eq('room_id', room.id),
+    ]);
 
     if (!data) {
       setIsLoading(false);
       return;
     }
 
+    const playersById = new Map((players || []).map((player) => [player.id, player]));
+
     data.sort((a, b) => {
       return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
     });
 
-    setAwards(data);
+    setAwards(data.map((award) => normalizeAward(award, playersById)));
     setIsLoading(false);
   }
 
@@ -147,6 +307,8 @@ export default function AwardsPage() {
 
   const isLastSlide = currentSlide === awards.length - 1;
 
+  const categoryLabel = t[award.category] || award.category;
+
   function nextSlide() {
     setCurrentSlide((prev) => {
       const next = Math.min(prev + 1, awards.length - 1);
@@ -172,13 +334,20 @@ export default function AwardsPage() {
             title={CATEGORY_META[award.category]?.title}
             winner={award.winner_player_name}
             winnerScore={award.winner_score}
+            hasWinner={award.winner_score > 0}
             leaderboard={award.leaderboard_json}
             winnerLabel={t.winner}
+            noWinnerLabel={formatTranslation(t.noWinner, {
+              category: categoryLabel,
+            })}
             leaderboardLabel={t.leaderboard}
           />
         ) : (
           <FinalWinnerSlide
-            winner={award.leaderboard_json[0]}
+            winner={{
+              ...award.leaderboard_json[0],
+              player_name: award.winner_player_name,
+            }}
             leaderboard={award.leaderboard_json}
             title={t.lastManStanding}
             finalRankingLabel={t.finalRanking}
