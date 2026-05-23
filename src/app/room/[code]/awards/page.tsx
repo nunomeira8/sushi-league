@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { getLanguage } from '@/lib/language';
 
 import { AwardSlide } from '@/components/awards/AwardSlide';
+import { ExportResultsPanel } from '@/components/awards/ExportResultsPanel';
 import { FinalWinnerSlide } from '@/components/awards/FinalWinnerSlide';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
@@ -409,6 +410,34 @@ export default function AwardsPage() {
           />
         ))}
       </div>
+
+      {hasReachedEnd && (
+        <div className="mt-5 flex">
+          <ExportResultsPanel
+            awards={awards}
+            categoryLabels={CATEGORY_LABELS}
+            labels={{
+              appName: 'Sushi League',
+              exportResults: t.exportResults,
+              exportResultsTitle: t.exportResultsTitle,
+              playedOn: t.playedOn,
+              categoriesInPlay: t.categoriesInPlay,
+              playedBy: t.playedBy,
+              finalWinner: t.finalWinnerExport,
+              categoryWinners: t.categoryWinnersExport,
+              leaderboard: t.leaderboard,
+              winner: t.winner,
+              noWinner: t.noWinner,
+              points: t.points,
+              copy: t.copyResults,
+              share: t.shareResults,
+              pdf: t.savePdf,
+              copied: t.copied,
+              shareUnavailable: t.shareUnavailable,
+            }}
+          />
+        </div>
+      )}
 
       <div className="mt-5 flex gap-3">
         {hasReachedEnd && (
