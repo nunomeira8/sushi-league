@@ -1,7 +1,9 @@
 type LeaderboardPlayer = {
+  player_id?: string;
   player_name: string;
   total_score: number;
   breakdown: Record<string, number>;
+  rank?: number;
 };
 
 type Props = {
@@ -11,6 +13,33 @@ type Props = {
   finalRankingLabel: string;
   pointsLabel: string;
 };
+
+function getOrdinal(rank: number) {
+  const remainder = rank % 100;
+
+  if (remainder >= 11 && remainder <= 13) {
+    return `${rank}th`;
+  }
+
+  switch (rank % 10) {
+    case 1:
+      return `${rank}st`;
+    case 2:
+      return `${rank}nd`;
+    case 3:
+      return `${rank}rd`;
+    default:
+      return `${rank}th`;
+  }
+}
+
+function getMedal(rank: number) {
+  if (rank === 1) return '🥇';
+  if (rank === 2) return '🥈';
+  if (rank === 3) return '🥉';
+
+  return null;
+}
 
 export function FinalWinnerSlide({ winner, leaderboard, title, finalRankingLabel, pointsLabel }: Props) {
   return (
@@ -29,15 +58,27 @@ export function FinalWinnerSlide({ winner, leaderboard, title, finalRankingLabel
         <h3 className="mb-4 text-lg font-semibold text-[#222222]">{finalRankingLabel}</h3>
 
         <div className="flex flex-col gap-3">
-          {leaderboard.map((player, index) => (
-            <div key={player.player_name} className="flex items-center justify-between rounded-2xl bg-[#FAF7F2] p-4">
-              <span className="font-medium text-[#222222]">
-                {index + 1}. {player.player_name}
-              </span>
+          {leaderboard.map((player, index) => {
+            const rank = player.rank ?? index + 1;
+            const medal = getMedal(rank);
 
-              <span className="font-bold text-[#FF7F5C]">{player.total_score}</span>
-            </div>
-          ))}
+            return (
+              <div
+                key={player.player_id ?? player.player_name}
+                className="flex items-center justify-between rounded-2xl bg-[#FAF7F2] p-4"
+              >
+                <span className="flex items-center gap-2 font-medium text-[#222222]">
+                  <span className="min-w-9 text-left">
+                    {medal ? `${medal} ` : ''}
+                    {getOrdinal(rank)}
+                  </span>
+                  <span>{player.player_name}</span>
+                </span>
+
+                <span className="font-bold text-[#FF7F5C]">{player.total_score}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
