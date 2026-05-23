@@ -8,6 +8,50 @@ const CATEGORY_WEIGHTS: Record<string, number> = {
     hot_dishes: 3,
 };
 
+function getRank(
+    leaderboard: {
+        score: number;
+        finished_at: number | null;
+    }[],
+    index: number,
+) {
+    if (index === 0) return 1;
+
+    const previous = leaderboard[index - 1];
+    const current = leaderboard[index];
+
+    if (
+        previous.score === current.score &&
+        previous.finished_at === current.finished_at
+    ) {
+        return getRank(leaderboard, index - 1);
+    }
+
+    return index + 1;
+}
+
+function getFinalRank(
+    leaderboard: {
+        total_score: number;
+        finished_at: number | null;
+    }[],
+    index: number,
+) {
+    if (index === 0) return 1;
+
+    const previous = leaderboard[index - 1];
+    const current = leaderboard[index];
+
+    if (
+        previous.total_score === current.total_score &&
+        previous.finished_at === current.finished_at
+    ) {
+        return getFinalRank(leaderboard, index - 1);
+    }
+
+    return index + 1;
+}
+
 export async function generateAwards(roomId: string) {
     const { data: existingAwards } = await supabase
         .from('room_awards')
@@ -36,6 +80,8 @@ export async function generateAwards(roomId: string) {
 
     if (!scores?.length) return;
 
+    const playersById = new Map(players.map((player) => [player.id, player]));
+
     const categories = [...new Set(scores.map((score) => score.category))];
 
     const awardsToInsert = [];
@@ -58,14 +104,34 @@ export async function generateAwards(roomId: string) {
     }
 
     for (const category of categories) {
-        const categoryScores = scores
-            .filter((score) => score.category === category)
-            .sort((a, b) => b.score - a.score);
+        const scoresInCategory = scores.filter((score) => score.category === category);
+        const hasWinner = scoresInCategory.some((score) => score.score > 0);
+        const categoryScores = scoresInCategory.sort((a, b) => {
+            if (b.score !== a.score) {
+                return b.score - a.score;
+            }
+
+            const playerA = playersById.get(a.player_id);
+            const playerB = playersById.get(b.player_id);
+
+            if (!hasWinner) {
+                return (playerA?.name || '').localeCompare(playerB?.name || '');
+            }
+
+            const finishedAtA = playerA?.finished_at ?? -1;
+            const finishedAtB = playerB?.finished_at ?? -1;
+
+            if (finishedAtB !== finishedAtA) {
+                return finishedAtB - finishedAtA;
+            }
+
+            return (playerA?.name || '').localeCompare(playerB?.name || '');
+        });
 
         if (!categoryScores.length) continue;
 
-        const leaderboard = categoryScores.map((score) => {
-            const player = players.find((p) => p.id === score.player_id);
+        const leaderboardWithoutRanks = categoryScores.map((score) => {
+            const player = playersById.get(score.player_id);
 
             const weightedScore =
                 score.score * (CATEGORY_WEIGHTS[category] || 1);
@@ -79,38 +145,68 @@ export async function generateAwards(roomId: string) {
                 player_id: score.player_id,
                 player_name: player?.name || 'Unknown',
                 score: score.score,
+                finished_at: player?.finished_at ?? null,
             };
         });
 
-        const winner = leaderboard[0];
+        const leaderboard = leaderboardWithoutRanks.map((player, index) => ({
+            ...player,
+            rank: hasWinner ? getRank(leaderboardWithoutRanks, index) : null,
+        }));
+
+        const winners = leaderboard.filter((player) => player.rank === 1);
+        const winner = winners[0];
 
         awardsToInsert.push({
             room_id: roomId,
             category,
-            winner_player_id: winner.player_id,
-            winner_player_name: winner.player_name,
-            winner_score: winner.score,
+            winner_player_id: hasWinner ? (winner?.player_id ?? null) : null,
+            winner_player_name: hasWinner
+                ? winners.map((player) => player.player_name).join(' / ')
+                : '',
+            winner_score: hasWinner ? (winner?.score ?? 0) : 0,
             leaderboard_json: leaderboard,
             is_final_winner: false,
         });
     }
 
     const finalLeaderboard = Object.values(finalScores)
-        .sort((a, b) => b.total - a.total)
+        .sort((a, b) => {
+            if (b.total !== a.total) {
+                return b.total - a.total;
+            }
+
+            const finishedAtA = a.player.finished_at ?? -1;
+            const finishedAtB = b.player.finished_at ?? -1;
+
+            if (finishedAtB !== finishedAtA) {
+                return finishedAtB - finishedAtA;
+            }
+
+            return a.player.name.localeCompare(b.player.name);
+        })
         .map((entry) => ({
             player_id: entry.player.id,
             player_name: entry.player.name,
             total_score: entry.total,
+            finished_at: entry.player.finished_at,
             breakdown: entry.breakdown,
+        }))
+        .map((player, index, leaderboard) => ({
+            ...player,
+            rank: getFinalRank(leaderboard, index),
         }));
 
-    const winner = finalLeaderboard[0];
+    const winners = finalLeaderboard.filter((player) => player.rank === 1);
+    const winner = winners[0];
 
     awardsToInsert.push({
         room_id: roomId,
         category: 'final_winner',
         winner_player_id: winner.player_id,
-        winner_player_name: winner.player_name,
+        winner_player_name: winners
+            .map((player) => player.player_name)
+            .join(' / '),
         winner_score: winner.total_score,
         leaderboard_json: finalLeaderboard,
         is_final_winner: true,
