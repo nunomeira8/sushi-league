@@ -92,24 +92,30 @@ export const translations = {
     howToPlayButton: "OK... I'm hungry 🍣",
     goalTitle: 'Goal',
     goalDescription:
-      'Eat sushi, count what you eat and try to finish with the highest score.',
+      'Eat, tap your counters, and try to become the most dangerous person at the table.',
     joinRoomDescription:
-      'Create a room or join one using a room code or QR Code. Pick your name and join your friends.',
+      'Create a room or join one with a code or QR. Pick a name, sit down, and pretend this is casual.',
     chooseBattleTitle: 'Game Settings',
     chooseBattleDescription:
-      'The admin chooses the game duration and which categories will count.',
+      'The admin chooses the timer and the categories that count. Yes, this is where the chaos is configured.',
     readyTitle: 'Get Ready',
     readyDescription:
-      'Every player must press READY before the battle begins.',
-    gameTitle: 'Time to Eat 🍣',
+      'Everyone taps ready before the game starts. No surprise attacks, only scheduled sushi violence.',
+    gameTitle: 'Time to Eat',
     gameDescription:
-      'During the game, use the counters to track what you eat in each category.',
+      'During the game, tap the counters for each category. Honesty is expected. Drama is optional.',
     htp_giveUpTitle: 'When You Can’t Eat Anymore',
     htp_giveUpDescription:
-      'Finished before time runs out? Mark yourself as done and wait for the other players.',
+      'Full before the timer ends? Mark yourself as done. Your score is safe, your pride is between you and the soy sauce.',
     winnerTitle: 'Results',
     winnerDescription:
-      'At the end, category winners are revealed… and finally the Sushi League Champion.',
+      'At the end, the awards reveal category winners first. Then comes the big one: the Sushi League Champion.',
+    tiebreakerTitle: 'When It Gets Spicy',
+    tiebreakerDescription:
+      'If scores are tied, the player who lasted longer wins. Same score and same time? Congratulations, you share the throne like civilized sushi royalty.',
+    exportTitle: 'Bragging Rights',
+    exportDescription:
+      'After the awards, export the results to copy, share, or save as PDF. Perfect for proving who became legend and who only ate cucumber.',
     calculatingWinners: 'Calculating winners...',
     //Feedback&Support
     feedbackSupport: 'Feedback & Support',
@@ -140,6 +146,7 @@ export const translations = {
       'Your feedback has been sent. You may have just improved Sushi League forever.',
     //Awards
     winner: 'Winner',
+    noWinner: 'No one touched {category}. The sushi survived.',
     leaderboard: 'Leaderboard',
     finalRanking: 'Final Ranking',
     lastManStanding: 'Last Man Standing',
@@ -147,6 +154,17 @@ export const translations = {
     previousAward: 'Previous Award',
     nextAward: 'Next Award',
     awardsFinished: 'Awards Finished',
+    exportResults: 'Export Results',
+    exportResultsTitle: 'Game Results',
+    playedOn: 'Played on',
+    categoriesInPlay: 'Categories in play',
+    playedBy: 'Played by',
+    finalWinnerExport: 'Final Winner',
+    categoryWinnersExport: 'Category Winners',
+    copyResults: 'Copy',
+    shareResults: 'Share',
+    savePdf: 'PDF',
+    shareUnavailable: 'Sharing is not available here. Results copied instead.',
     startersAwardTitle: 'Starters King',
     sushiAwardTitle: 'Sushi Monster',
     sashimiAwardTitle: 'Sashimi Beast',
@@ -245,24 +263,30 @@ export const translations = {
     howToPlayButton: 'OK... fiquei com fome 🍣',
     goalTitle: 'Objetivo',
     goalDescription:
-      'Come sushi, conta as peças que comes e tenta terminar com a maior pontuação.',
+      'Come, carrega nos contadores e tenta ser a pessoa mais perigosa da mesa.',
     joinRoomDescription:
-      'Cria uma sala ou entra numa existente com um código ou QR Code. Escolhe o teu nome e junta-te aos teus amigos.',
+      'Cria uma sala ou entra com código ou QR. Escolhe o teu nome, senta-te e finge que isto é casual.',
     chooseBattleTitle: 'Configurar o Jogo',
     chooseBattleDescription:
-      'O admin escolhe o tempo da partida e as categorias que vão contar para a pontuação.',
+      'O admin escolhe o tempo e as categorias que contam. Sim, é aqui que se configura o caos.',
     readyTitle: 'Preparar a Batalha',
     readyDescription:
-      'Todos os jogadores têm de carregar em READY antes do jogo começar.',
-    gameTitle: 'Hora de Comer 🍣',
+      'Todos carregam em pronto antes do jogo começar. Sem ataques surpresa, só violência de sushi marcada.',
+    gameTitle: 'Hora de Comer',
     gameDescription:
-      'Durante o tempo do jogo, usa os contadores para registar o que estás a comer em cada categoria.',
+      'Durante o jogo, usa os contadores de cada categoria. Honestidade é esperada. Drama é opcional.',
     htp_giveUpTitle: 'Quando Já Não Dá Mais',
     htp_giveUpDescription:
-      'Terminaste antes do tempo? Podes marcar que acabaste e esperar pelos restantes jogadores.',
+      'Ficaste cheio antes do fim? Marca que terminaste. A pontuação fica guardada, o orgulho fica contigo e com o molho de soja.',
     winnerTitle: 'Os Resultados',
     winnerDescription:
-      'No fim aparecem os vencedores de cada categoria e o campeão final da Sushi League.',
+      'No fim, aparecem primeiro os vencedores por categoria. Depois vem o grande momento: o campeão da Sushi League.',
+    tiebreakerTitle: 'Quando a Coisa Aperta',
+    tiebreakerDescription:
+      'Se houver empate, ganha quem aguentou mais tempo. Mesma pontuação e mesmo tempo? Parabéns, partilham o trono como realeza do sushi.',
+    exportTitle: 'Direito a Gabarolice',
+    exportDescription:
+      'Depois dos prémios, podes exportar os resultados para copiar, partilhar ou guardar em PDF. Ideal para provar quem virou lenda e quem só comeu pepino.',
     calculatingWinners: 'A calcular os vencedores...',
     //Feedback&Support
     feedbackSupport: 'Feedback & Suporte',
@@ -293,6 +317,7 @@ export const translations = {
       'O teu feedback foi enviado. Talvez tenhas acabado de melhorar a Sushi League para sempre.',
     //Awards
     winner: 'Vencedor',
+    noWinner: 'Ninguem tocou em {category}. O sushi ganhou esta ronda.',
     leaderboard: 'Classificação',
     finalRanking: 'Classificação Final',
     lastManStanding: 'Campeão da Sushi League',
@@ -300,6 +325,17 @@ export const translations = {
     previousAward: 'Prémio Anterior',
     nextAward: 'Próximo Prémio',
     awardsFinished: 'Prémios Terminados',
+    exportResults: 'Exportar Resultados',
+    exportResultsTitle: 'Resultados do Jogo',
+    playedOn: 'Jogado em',
+    categoriesInPlay: 'Categorias em jogo',
+    playedBy: 'Jogado por',
+    finalWinnerExport: 'Vencedor Final',
+    categoryWinnersExport: 'Vencedores por Categoria',
+    copyResults: 'Copiar',
+    shareResults: 'Partilhar',
+    savePdf: 'PDF',
+    shareUnavailable: 'A partilha não está disponível aqui. Os resultados foram copiados.',
     startersAwardTitle: 'Rei das Entradas',
     sushiAwardTitle: 'Monstro do Sushi',
     sashimiAwardTitle: 'Besta do Sashimi',
@@ -398,25 +434,31 @@ export const translations = {
     howToPlayButton: "OK... j'ai faim 🍣",
     goalTitle: 'Objectif',
     goalDescription:
-      'Mange des sushis, compte ce que tu manges et essaie d’obtenir le meilleur score.',
+      'Mange, appuie sur tes compteurs et essaie de devenir la personne la plus dangereuse de la table.',
     joinRoomDescription:
-      'Crée une salle ou rejoins-en une avec un code ou un QR Code. Choisis ton nom et rejoins tes amis.',
+      'Crée une salle ou rejoins-en une avec un code ou un QR. Choisis ton nom, assieds-toi et fais comme si tout était normal.',
     chooseBattleTitle: 'Configurer la Partie',
     chooseBattleDescription:
-      'L’admin choisit la durée du jeu et les catégories qui compteront.',
+      'L’admin choisit le temps et les catégories qui comptent. Oui, c’est ici que le chaos est configuré.',
     readyTitle: 'Préparez-vous',
     readyDescription:
-      'Tous les joueurs doivent appuyer sur READY avant le début de la bataille.',
-    gameTitle: 'À Table 🍣',
+      'Tout le monde appuie sur prêt avant le début. Pas d’attaque surprise, seulement du chaos de sushi planifié.',
+    gameTitle: 'À Table',
     gameDescription:
-      'Pendant le jeu, utilise les compteurs pour enregistrer ce que tu manges dans chaque catégorie.',
+      'Pendant la partie, utilise les compteurs de chaque catégorie. L’honnêteté est attendue. Le drama est optionnel.',
     htp_giveUpTitle: 'Quand Tu N’en Peux Plus',
     htp_giveUpDescription:
-      'Tu as terminé avant la fin ? Indique que tu as fini et attends les autres joueurs.',
+      'Tu es plein avant la fin ? Indique que tu as fini. Ton score est sauvegardé, ta fierté reste entre toi et la sauce soja.',
 
     winnerTitle: 'Résultats',
     winnerDescription:
-      'À la fin, les gagnants de chaque catégorie sont révélés… puis le grand champion de Sushi League.',
+      'À la fin, les gagnants par catégorie sont révélés d’abord. Ensuite vient le grand moment : le champion de Sushi League.',
+    tiebreakerTitle: 'Quand Ça Se Corse',
+    tiebreakerDescription:
+      'En cas d’égalité, le joueur qui a tenu le plus longtemps gagne. Même score et même temps ? Bravo, vous partagez le trône comme la noblesse du sushi.',
+    exportTitle: 'Droit de Frimer',
+    exportDescription:
+      'Après les prix, exporte les résultats pour les copier, les partager ou les garder en PDF. Parfait pour prouver qui est devenu une légende et qui a surtout mangé du concombre.',
     calculatingWinners:
       'Calcul des gagnants...',
     //Feedback&Support
@@ -448,6 +490,7 @@ export const translations = {
       'Ton feedback a été envoyé. Tu viens peut-être d’améliorer Sushi League pour toujours.',
     // Awards
     winner: 'Gagnant',
+    noWinner: "Personne n'a touche a {category}. Les sushis gagnent ce round.",
     leaderboard: 'Classement',
     finalRanking: 'Classement Final',
     lastManStanding: 'Champion de Sushi League',
@@ -455,6 +498,17 @@ export const translations = {
     previousAward: 'Prix Précédent',
     nextAward: 'Prix Suivant',
     awardsFinished: 'Prix Terminés',
+    exportResults: 'Exporter les Résultats',
+    exportResultsTitle: 'Résultats du Jeu',
+    playedOn: 'Joué le',
+    categoriesInPlay: 'Catégories en jeu',
+    playedBy: 'Joué par',
+    finalWinnerExport: 'Gagnant Final',
+    categoryWinnersExport: 'Gagnants par Catégorie',
+    copyResults: 'Copier',
+    shareResults: 'Partager',
+    savePdf: 'PDF',
+    shareUnavailable: 'Le partage n’est pas disponible ici. Les résultats ont été copiés.',
     startersAwardTitle: 'Roi des Entrées',
     sushiAwardTitle: 'Monstre du Sushi',
     sashimiAwardTitle: 'Bête du Sashimi',

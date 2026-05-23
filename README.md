@@ -103,26 +103,60 @@ Once everyone finishes:
 
 🏆 The awards ceremony begins.
 
-A live slideshow reveals:
+A polished slideshow reveals:
 
 - Winners of each category
 - Full rankings
 - Category champions
 - Final scores
 - The **Last Man Standing**
+- Animated reveals, winner glow, confetti and a premium final champion slide
 
 Every category matters.
 
 Every sushi counts.
 
+### Tie rules
+
+If players tie in a category:
+
+- The player who finished later wins
+- If the score and finish time are the same, the award is shared
+- If everyone has **0** in a category, nobody wins it. The sushi survives.
+
+For the final winner:
+
+- Total score comes first
+- If there is a tie, the player who lasted longer wins
+- If total score and time are both tied, the crown is shared
+
 Only one player becomes the true Sushi League champion 👑
+
+---
+
+## 7. Export the Results
+
+After the awards finish, players can export the full match summary:
+
+- Final winner and survival time
+- Category winners
+- Full leaderboards for every category
+- Date played, active categories, and all player names
+
+Export options:
+
+- Copy to clipboard
+- Share with other apps
+- Download as PDF
+
+Perfect for receipts, group chats, and legally binding sushi bragging rights.
 
 ---
 
 # ✨ Features
 
 - 🍣 Real-time multiplayer gameplay
-- 🏆 Award slideshow system
+- 🏆 Cinematic award slideshow system
 - 📱 Mobile-first responsive design
 - 🌍 Multi-language support
 - ⚡ Live score tracking
@@ -130,7 +164,9 @@ Only one player becomes the true Sushi League champion 👑
 - 🎭 Funny game flow and social interactions
 - 💬 In-app feedback/support system
 - ⏳ Live timers and survival tracking
-- 🎉 Cinematic awards reveal
+- 🎉 Winner glow, confetti and premium final champion reveal
+- 📤 Export results to clipboard, share sheet or PDF
+- ⚖️ Fair tie-breaking using finish time
 
 ---
 

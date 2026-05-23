@@ -24,3 +24,169 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes award-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes award-pop {
+  0% {
+    transform: translateY(12px) scale(0.72) rotate(-8deg);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(-4px) scale(1.12) rotate(4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes award-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(255, 127, 92, 0);
+  }
+  50% {
+    text-shadow:
+      0 0 18px rgba(255, 127, 92, 0.35),
+      0 0 34px rgba(255, 195, 77, 0.3);
+  }
+}
+
+@keyframes award-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes award-confetti {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -24px, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--x), 128px, 0) rotate(260deg);
+  }
+}
+
+@keyframes award-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes champion-crown {
+  0% {
+    transform: translateY(8px) scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
+  65% {
+    transform: translateY(-6px) scale(1.12) rotate(6deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes champion-shine {
+  from {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+@keyframes champion-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 14px 22px rgba(255, 195, 77, 0.18));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 18px 30px rgba(255, 195, 77, 0.38));
+  }
+}
+
+.award-slide-shell {
+  animation: award-slide-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.award-pop {
+  animation: award-pop 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.award-float {
+  animation: award-float 3.4s ease-in-out infinite;
+}
+
+.award-winner-glow {
+  animation: award-glow 2.8s ease-in-out infinite;
+}
+
+.award-confetti-piece {
+  animation: award-confetti 2.4s ease-out infinite;
+  animation-delay: var(--delay);
+}
+
+.award-row {
+  animation: award-row-in 360ms ease-out both;
+  animation-delay: var(--delay);
+}
+
+.champion-crown {
+  animation: champion-crown 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.champion-trophy {
+  animation: champion-pulse 2.6s ease-in-out infinite;
+}
+
+.champion-shine::after {
+  animation: champion-shine 2.9s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  content: "";
+  inset: 0;
+  position: absolute;
+  width: 42%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .award-slide-shell,
+  .award-pop,
+  .award-float,
+  .award-winner-glow,
+  .award-confetti-piece,
+  .award-row,
+  .champion-crown,
+  .champion-trophy,
+  .champion-shine::after {
+    animation: none;
+  }
+}
