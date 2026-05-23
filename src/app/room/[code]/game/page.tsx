@@ -20,6 +20,10 @@ import { getLanguage } from '@/lib/language';
 
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
+const CATEGORY_ORDER = ['starters', 'sushi', 'sashimi', 'temaki', 'hot_dishes'] as const;
+
+type Category = (typeof CATEGORY_ORDER)[number];
+
 export default function GamePage() {
   const params = useParams();
 
@@ -41,6 +45,14 @@ export default function GamePage() {
   const [scores, setScores] = useState<Record<string, number>>({});
 
   const [isFinishing, setIsFinishing] = useState(false);
+
+  const categoryLabels: Record<Category, string> = {
+    starters: t.starters,
+    sushi: t.sushi,
+    sashimi: t.sashimi,
+    temaki: t.temaki,
+    hot_dishes: t.hot_dishes,
+  };
 
   async function fetchRoom() {
     const { data } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
@@ -163,6 +175,8 @@ export default function GamePage() {
 
   const seconds = timeLeft % 60;
 
+  const enabledCategories = CATEGORY_ORDER.filter((category) => room.enabled_categories.includes(category));
+
   async function finishGame() {
     if (!room || !room.started_at) return;
 
@@ -207,12 +221,12 @@ export default function GamePage() {
             <p className="mb-3 text-sm font-semibold tracking-wide text-gray-400 uppercase">{t.categoriesPlaying}</p>
 
             <div className="flex flex-wrap justify-center gap-2">
-              {room.enabled_categories.map((category) => (
+              {enabledCategories.map((category) => (
                 <div
                   key={category}
                   className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#222222] shadow-sm"
                 >
-                  {t[category as keyof typeof t]}
+                  {categoryLabels[category]}
                 </div>
               ))}
             </div>
@@ -229,10 +243,10 @@ export default function GamePage() {
           </div>
 
           <div className="mt-10 flex flex-1 flex-col gap-4 overflow-y-auto pb-6">
-            {room.enabled_categories.map((category) => (
+            {enabledCategories.map((category) => (
               <CategoryCounter
                 key={category}
-                name={t[category as keyof typeof t] as string}
+                name={categoryLabels[category]}
                 value={scores[category] || 0}
                 onIncrease={() => updateScore(category, (scores[category] || 0) + 1)}
                 onDecrease={() => updateScore(category, (scores[category] || 0) - 1)}
