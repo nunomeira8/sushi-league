@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useParams } from 'next/navigation';
 
@@ -16,9 +16,8 @@ import { getPlayerId } from '@/lib/storage';
 
 import { GiveUpModal } from '@/components/game/GiveUpModal';
 import { CategoryCounter } from '@/components/game/CategoryCounter';
-import { getLanguage } from '@/lib/language';
-
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useBufferedScores } from '@/components/game/useBufferedScores';
+import { useLanguage } from '@/lib/useLanguage';
 
 const CATEGORY_ORDER = ['starters', 'sushi', 'sashimi', 'temaki', 'hot_dishes'] as const;
 
@@ -29,7 +28,7 @@ export default function GamePage() {
 
   const code = params.code as string;
 
-  const language = getLanguage();
+  const language = useLanguage();
   const t = translations[language];
 
   const [room, setRoom] = useState<Room | null>(null);
@@ -42,7 +41,7 @@ export default function GamePage() {
 
   const [isGiveUpOpen, setIsGiveUpOpen] = useState(false);
 
-  const [scores, setScores] = useState<Record<string, number>>({});
+  const { scores, changeScore, flushScores } = useBufferedScores(code);
 
   const [isFinishing, setIsFinishing] = useState(false);
 
@@ -54,14 +53,12 @@ export default function GamePage() {
     hot_dishes: t.hot_dishes,
   };
 
-  async function fetchRoom() {
+  const fetchRoom = useCallback(async () => {
     const { data } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
     if (!data) return;
 
     setRoom(data);
-
-    await fetchScores();
 
     const now = new Date();
 
@@ -70,52 +67,52 @@ export default function GamePage() {
     const secondsLeft = Math.max(0, Math.floor((end.getTime() - now.getTime()) / 1000));
 
     setTimeLeft(secondsLeft);
-  }
+  }, [code]);
 
-  async function fetchScores() {
+  const finishGame = useCallback(async () => {
+    if (!room || !room.started_at) return;
+
     const playerId = getPlayerId();
 
-    const { data } = await supabase.from('player_scores').select('*').eq('player_id', playerId);
+    const startedAtValue = room.started_at;
+    const startedAt = new Date(startedAtValue).getTime();
 
-    if (!data) return;
+    const now = Date.now();
 
-    const formattedScores: Record<string, number> = {};
+    const elapsedSeconds = Math.floor((now - startedAt) / 1000);
 
-    data.forEach((item) => {
-      formattedScores[item.category] = item.score;
-    });
+    const scoresSaved = await flushScores();
 
-    setScores(formattedScores);
-  }
+    if (!scoresSaved) return;
 
-  async function updateScore(category: string, value: number) {
-    const playerId = getPlayerId();
-
-    const nextValue = Math.max(0, value);
-
-    setScores((prev) => ({
-      ...prev,
-      [category]: nextValue,
-    }));
-
-    await supabase
-      .from('player_scores')
+    const { error } = await supabase
+      .from('players')
       .update({
-        score: nextValue,
+        finished: true,
+
+        finished_at: elapsedSeconds,
       })
-      .eq('player_id', playerId)
-      .eq('category', category);
-  }
+      .eq('id', playerId);
+
+    console.log('FINISH ERROR', error);
+
+    router.push(`/room/${room.code}/waiting`);
+  }, [flushScores, room, router]);
 
   useEffect(() => {
-    fetchRoom();
+    const roomTimeout = setTimeout(() => {
+      void fetchRoom();
+    }, 0);
 
     const introTimeout = setTimeout(() => {
       setShowIntro(false);
     }, 5000);
 
-    return () => clearTimeout(introTimeout);
-  }, []);
+    return () => {
+      clearTimeout(roomTimeout);
+      clearTimeout(introTimeout);
+    };
+  }, [fetchRoom]);
 
   useEffect(() => {
     if (showIntro) return;
@@ -135,7 +132,7 @@ export default function GamePage() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [showIntro]);
+  }, [finishGame, showIntro]);
 
   if (!room) {
     return null;
@@ -157,6 +154,10 @@ export default function GamePage() {
 
       const elapsedSeconds = Math.floor((now - startedAt) / 1000);
 
+      const scoresSaved = await flushScores();
+
+      if (!scoresSaved) return;
+
       await supabase
         .from('players')
         .update({
@@ -176,32 +177,6 @@ export default function GamePage() {
   const seconds = timeLeft % 60;
 
   const enabledCategories = CATEGORY_ORDER.filter((category) => room.enabled_categories.includes(category));
-
-  async function finishGame() {
-    if (!room || !room.started_at) return;
-
-    const playerId = getPlayerId();
-
-    const startedAtValue = room.started_at;
-    const startedAt = new Date(startedAtValue).getTime();
-
-    const now = Date.now();
-
-    const elapsedSeconds = Math.floor((now - startedAt) / 1000);
-
-    const { error } = await supabase
-      .from('players')
-      .update({
-        finished: true,
-
-        finished_at: elapsedSeconds,
-      })
-      .eq('id', playerId);
-
-    console.log('FINISH ERROR', error);
-
-    router.push(`/room/${room.code}/waiting`);
-  }
 
   return (
     <main className="flex min-h-screen flex-col bg-[#FAF7F2] px-6 py-8">
@@ -248,8 +223,8 @@ export default function GamePage() {
                 key={category}
                 name={categoryLabels[category]}
                 value={scores[category] || 0}
-                onIncrease={() => updateScore(category, (scores[category] || 0) + 1)}
-                onDecrease={() => updateScore(category, (scores[category] || 0) - 1)}
+                onIncrease={() => changeScore(category, 1)}
+                onDecrease={() => changeScore(category, -1)}
               />
             ))}
           </div>
