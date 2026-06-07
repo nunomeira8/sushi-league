@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Coffee } from 'lucide-react';
 
 import { ActionCard } from '@/components/home/ActionCard';
 import { LanguageSelector } from '@/components/home/LanguageSelector';
 import { WelcomeSection } from '@/components/home/WelcomeSection';
 
 import { translations } from '@/i18n/translations';
-import { Language } from '@/types/language';
 
-import { getLanguage, saveLanguage } from '@/lib/language';
+import { saveLanguage } from '@/lib/language';
+import { useLanguage } from '@/lib/useLanguage';
 import { HowToPlayModal } from '@/components/home/HowToPlayModal';
 import { FeedbackModal } from '@/components/home/FeedbackModal';
 
 import packageJson from '../../package.json';
 
 export default function Home() {
-  const [language, setLanguage] = useState<Language>('en');
+  const language = useLanguage();
 
   const [isHowToOpen, setIsHowToOpen] = useState(false);
 
@@ -24,17 +25,11 @@ export default function Home() {
 
   const t = translations[language];
 
-  useEffect(() => {
-    setLanguage(getLanguage());
-  }, []);
-
   return (
     <main className="relative flex min-h-[100dvh] flex-col items-center bg-[#FAF7F2] px-6 pt-4">
       <LanguageSelector
         selectedLanguage={language}
         onSelect={(lang) => {
-          setLanguage(lang);
-
           saveLanguage(lang);
         }}
       />
@@ -62,7 +57,7 @@ export default function Home() {
           version={packageJson.version}
         />
       </div>
-      <div className="flex items-center gap-2 pb-6 text-sm text-gray-400">
+      <div className="flex flex-wrap items-center justify-center gap-2 pb-6 text-sm text-gray-400">
         <span>v{packageJson.version}</span>
 
         <span>•</span>
@@ -70,6 +65,18 @@ export default function Home() {
         <button onClick={() => setIsFeedbackOpen(true)} className="font-medium text-[#FF7F5C]">
           {t.feedbackSupport}
         </button>
+
+        <span>•</span>
+
+        <a
+          href="https://buymeacoffee.com/sushileague"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 font-medium text-[#FF7F5C] transition hover:text-[#E96849]"
+        >
+          <Coffee size={16} aria-hidden="true" />
+          Buy me a coffee
+        </a>
       </div>
     </main>
   );

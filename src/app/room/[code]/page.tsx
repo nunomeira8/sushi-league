@@ -20,7 +20,7 @@ import { Room } from '@/types/room';
 import { QrCodeModal } from '../QrCodeModal';
 import { SettingsModal } from '../SettingsModal';
 
-import { getLanguage } from '@/lib/language';
+import { useLanguage } from '@/lib/useLanguage';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function RoomPage() {
@@ -28,7 +28,7 @@ export default function RoomPage() {
 
   const router = useRouter();
 
-  const language = getLanguage();
+  const language = useLanguage();
   const t = translations[language];
 
   const code = params.code as string;
@@ -324,18 +324,16 @@ export default function RoomPage() {
 
           <div className="mt-6">
             {!allPlayersReady && (
-  <button
-    onClick={toggleReady}
-    disabled={currentPlayer?.is_ready}
-    className={`w-full rounded-2xl py-4 text-lg font-semibold text-white shadow-sm transition active:scale-95 ${
-      currentPlayer?.is_ready
-        ? 'cursor-default bg-[#6BA368]'
-        : 'bg-[#FF7F5C] hover:brightness-95'
-    }`}
-  >
-    {currentPlayer?.is_ready ? `✅ ${t.readyConfirmed}` : t.markReady}
-  </button>
-)}
+              <button
+                onClick={toggleReady}
+                disabled={currentPlayer?.is_ready}
+                className={`w-full rounded-2xl py-4 text-lg font-semibold text-white shadow-sm transition active:scale-95 ${
+                  currentPlayer?.is_ready ? 'cursor-default bg-[#6BA368]' : 'bg-[#FF7F5C] hover:brightness-95'
+                }`}
+              >
+                {currentPlayer?.is_ready ? `✅ ${t.readyConfirmed}` : t.markReady}
+              </button>
+            )}
 
             {currentPlayer?.is_admin && (
               <button
