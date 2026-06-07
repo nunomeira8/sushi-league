@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 import { supabase } from '@/lib/supabase';
-import { getLanguage } from '@/lib/language';
+import { useLanguage } from '@/lib/useLanguage';
 import { getPlayerId } from '@/lib/storage';
 import { generateAwards } from '@/lib/generateAwards';
 
@@ -20,7 +20,7 @@ export default function WaitingPage() {
 
   const router = useRouter();
 
-  const language = getLanguage();
+  const language = useLanguage();
 
   const t = translations[language];
 
@@ -68,8 +68,8 @@ export default function WaitingPage() {
     const currentPlayer = players.find((player) => player.id === getPlayerId());
 
     async function prepareAwards() {
-      if(!room) return;
-      
+      if (!room) return;
+
       if (currentPlayer?.is_admin && !room.awards_start_at) {
         await generateAwards(room.id);
 

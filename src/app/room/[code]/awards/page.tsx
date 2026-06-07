@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
 import { supabase } from '@/lib/supabase';
-import { getLanguage } from '@/lib/language';
+import { useLanguage } from '@/lib/useLanguage';
 
 import { AwardSlide } from '@/components/awards/AwardSlide';
 import { ExportResultsPanel } from '@/components/awards/ExportResultsPanel';
@@ -176,25 +176,18 @@ function normalizeFinalAward(award: RoomAward, playersById: Map<string, AwardPla
   return {
     ...award,
     winner_player_id: winner.player_id,
-    winner_player_name: winners
-      .map((player: FinalLeaderboardPlayer) => player.player_name)
-      .join(' / '),
+    winner_player_name: winners.map((player: FinalLeaderboardPlayer) => player.player_name).join(' / '),
     winner_score: winner.total_score,
     leaderboard_json: leaderboard,
   };
 }
 
 function normalizeAward(award: RoomAward, playersById: Map<string, AwardPlayer>) {
-  return award.is_final_winner
-    ? normalizeFinalAward(award, playersById)
-    : normalizeCategoryAward(award, playersById);
+  return award.is_final_winner ? normalizeFinalAward(award, playersById) : normalizeCategoryAward(award, playersById);
 }
 
 function formatTranslation(template: string, values: Record<string, string>) {
-  return Object.entries(values).reduce(
-    (message, [key, value]) => message.split(`{${key}}`).join(value),
-    template,
-  );
+  return Object.entries(values).reduce((message, [key, value]) => message.split(`{${key}}`).join(value), template);
 }
 
 export default function AwardsPage() {
@@ -202,7 +195,7 @@ export default function AwardsPage() {
 
   const code = params.code as string;
 
-  const language = getLanguage();
+  const language = useLanguage();
 
   const t = translations[language];
 
@@ -347,12 +340,12 @@ export default function AwardsPage() {
   const categoryLabel = !award.is_final_winner ? CATEGORY_LABELS[award.category] : award.category;
 
   const finalWinner = award.is_final_winner
-    ? award.leaderboard_json[0] ?? {
+    ? (award.leaderboard_json[0] ?? {
         player_id: award.winner_player_id ?? '',
         player_name: award.winner_player_name,
         total_score: award.winner_score,
         breakdown: {},
-      }
+      })
     : null;
 
   function nextSlide() {
