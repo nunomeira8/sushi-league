@@ -52,12 +52,6 @@ export function HowToPlayModal({ isOpen, onClose, t }: Props) {
             </div>
 
             <div>
-              <h2 className="text-xl font-bold text-[#FF7F5C]">😵 {t.htp_giveUpTitle}</h2>
-
-              <p className="mt-2 text-gray-600">{t.htp_giveUpDescription}</p>
-            </div>
-
-            <div>
               <h2 className="text-xl font-bold text-[#FF7F5C]">🏆 {t.winnerTitle}</h2>
 
               <p className="mt-2 text-gray-600">{t.winnerDescription}</p>
