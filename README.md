@@ -49,9 +49,11 @@ No one escapes the sushi battlefield 🍣
 The admin can fully customize the game.
 
 ### ⏱ Game Duration
+
 Choose how long the battle lasts.
 
 ### 🍱 Categories
+
 Enable only the categories your group wants to play with:
 
 - **Starters** → tempura, spring rolls, sesame balls, crepes, etc.
@@ -76,11 +78,11 @@ Each category has its own counter.
 
 Track your progress live and try not to explode 🍣
 
-If you’re defeated by sushi...
+Finished eating before the timer ends?
 
-> You can finish early 😭
+> You can finish early and keep your score.
 
-(Your friends may never forget it.)
+You will join the waiting room while the others finish.
 
 ---
 
@@ -90,7 +92,6 @@ When players finish eating:
 
 - They move to the waiting room
 - Remaining players are shown live
-- Survival time is tracked
 - Everyone waits for the final results together
 
 The tension grows...
@@ -120,17 +121,15 @@ Every sushi counts.
 
 If players tie in a category:
 
-- The player who finished later wins
-- If the score and finish time are the same, the award is shared
+- Players with the same score share the position and award
 - If everyone has **0** in a category, nobody wins it. The sushi survives.
 
 For the final winner:
 
-- Total score comes first
-- If there is a tie, the player who lasted longer wins
-- If total score and time are both tied, the crown is shared
+- Total score decides the winner
+- Players with the same total score share the crown
 
-Only one player becomes the true Sushi League champion 👑
+The highest score becomes the Sushi League champion. Tied scores share the crown 👑
 
 ---
 
@@ -138,7 +137,7 @@ Only one player becomes the true Sushi League champion 👑
 
 After the awards finish, players can export the full match summary:
 
-- Final winner and survival time
+- Final winner
 - Category winners
 - Full leaderboards for every category
 - Date played, active categories, and all player names
@@ -163,10 +162,10 @@ Perfect for receipts, group chats, and legally binding sushi bragging rights.
 - 📷 QR room joining
 - 🎭 Funny game flow and social interactions
 - 💬 In-app feedback/support system
-- ⏳ Live timers and survival tracking
+- ⏳ Live game timer
 - 🎉 Winner glow, confetti and premium final champion reveal
 - 📤 Export results to clipboard, share sheet or PDF
-- ⚖️ Fair tie-breaking using finish time
+- ⚖️ Shared awards for tied scores
 
 ---
 
