@@ -327,7 +327,7 @@ export default function AwardsPage() {
   }
 
   return (
-    <main className="flex min-h-[100dvh] flex-col bg-[#FAF7F2] px-6 py-8">
+    <main className="flex min-h-[100dvh] flex-col overflow-x-hidden bg-[#FAF7F2] px-6 py-8">
       <div key={award.category} onClick={nextSlide} className="award-slide-shell flex flex-1 flex-col">
         {!award.is_final_winner ? (
           <AwardSlide
