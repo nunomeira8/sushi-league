@@ -6,6 +6,8 @@ Create a room, invite your friends, track what everyone eats, and discover who b
 
 🌍 Available in **English, Portuguese and French**
 
+Current version: **v1.1.0**
+
 ---
 
 # 🚀 Play Now
@@ -71,12 +73,15 @@ At least one category must be enabled.
 Once the game starts:
 
 - A live countdown begins
-- Every player gets real-time counters
+- Every player gets compact category counters
 - Count what you eat during the meal
+- Tap the category info icons whenever the menu gets confusing
 
 Each category has its own counter.
 
-Track your progress live and try not to explode 🍣
+Scores are saved locally and synced during the game, protecting progress from accidental refreshes or temporary connection problems.
+
+The timer follows the real match end time, even after locking and reopening the phone.
 
 Finished eating before the timer ends?
 
@@ -159,10 +164,12 @@ Perfect for receipts, group chats, and legally binding sushi bragging rights.
 - 📱 Mobile-first responsive design
 - 🌍 Multi-language support
 - ⚡ Live score tracking
+- 💾 Local score recovery after refreshes or connection problems
+- ℹ️ In-game category guides
 - 📷 QR room joining
 - 🎭 Funny game flow and social interactions
 - 💬 In-app feedback/support system
-- ⏳ Live game timer
+- ⏳ Phone-lock-safe live game timer
 - 🎉 Winner glow, confetti and premium final champion reveal
 - 📤 Export results to clipboard, share sheet or PDF
 - ⚖️ Shared awards for tied scores
@@ -171,7 +178,7 @@ Perfect for receipts, group chats, and legally binding sushi bragging rights.
 
 # 🛠 Tech Stack
 
-- **Next.js 15**
+- **Next.js 16**
 - **React**
 - **TypeScript**
 - **TailwindCSS**
