@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LogIn, Plus } from 'lucide-react';
 
 type Props = {
   createRoomText: string;
@@ -7,20 +8,22 @@ type Props = {
 
 export function ActionCard({ createRoomText, joinRoomText }: Props) {
   return (
-    <div className="mt-8 w-full max-w-sm rounded-[32px] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-      <div className="flex flex-col gap-4">
-        <Link href="/create" className="w-full">
-          <button className="w-full rounded-2xl bg-[#FF7F5C] px-5 py-4 text-lg font-semibold text-white shadow-md transition active:scale-95">
-            {createRoomText}
-          </button>
-        </Link>
+    <div className="flex w-full max-w-xs flex-col gap-3">
+      <Link
+        href="/create"
+        className="flex min-h-13 w-full items-center justify-center gap-2 rounded-lg bg-[#FF7F5C] px-4 py-3 text-base font-semibold text-white shadow-[0_5px_14px_rgba(255,127,92,0.24)] transition hover:bg-[#F26F4C] active:scale-[0.98]"
+      >
+        <Plus size={20} strokeWidth={2.5} aria-hidden="true" />
+        {createRoomText}
+      </Link>
 
-        <Link href="/join" className="w-full">
-          <button className="w-full rounded-2xl border-2 border-[#6BA368] bg-white px-5 py-4 text-lg font-semibold text-[#5D8F5A] transition active:scale-95">
-            {joinRoomText}
-          </button>
-        </Link>
-      </div>
+      <Link
+        href="/join"
+        className="flex min-h-13 w-full items-center justify-center gap-2 rounded-lg border-2 border-[#6BA368] bg-white px-4 py-3 text-base font-semibold text-[#5D8F5A] shadow-sm transition hover:bg-[#F4F8F3] active:scale-[0.98]"
+      >
+        <LogIn size={19} strokeWidth={2.5} aria-hidden="true" />
+        {joinRoomText}
+      </Link>
     </div>
   );
 }
