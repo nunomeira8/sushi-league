@@ -1,8 +1,9 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf7f2;
+  --foreground: #222222;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,15 +13,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  min-height: 100%;
+  background-color: var(--background);
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -171,7 +170,7 @@ body {
 .champion-shine::after {
   animation: champion-shine 2.9s ease-in-out infinite;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  content: "";
+  content: '';
   inset: 0;
   position: absolute;
   width: 42%;
