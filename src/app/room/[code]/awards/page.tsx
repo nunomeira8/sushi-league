@@ -22,7 +22,6 @@ type AwardLeaderboardPlayer = {
   player_id: string;
   player_name: string;
   score: number;
-  finished_at?: number | null;
   rank?: number | null;
 };
 
@@ -31,7 +30,6 @@ type FinalLeaderboardPlayer = {
   player_name: string;
   total_score: number;
   breakdown: Record<string, number>;
-  finished_at?: number | null;
   rank?: number;
 };
 
@@ -56,18 +54,13 @@ type FinalAward = BaseAward & {
 
 type RoomAward = CategoryAward | FinalAward;
 
-type AwardPlayer = {
-  id: string;
-  finished_at: number | null;
-};
-
 function getRank(leaderboard: AwardLeaderboardPlayer[], index: number) {
   if (index === 0) return 1;
 
   const previous = leaderboard[index - 1];
   const current = leaderboard[index];
 
-  if (previous.score === current.score && previous.finished_at === current.finished_at) {
+  if (previous.score === current.score) {
     return getRank(leaderboard, index - 1);
   }
 
@@ -80,7 +73,7 @@ function getFinalRank(leaderboard: FinalLeaderboardPlayer[], index: number) {
   const previous = leaderboard[index - 1];
   const current = leaderboard[index];
 
-  if (previous.total_score === current.total_score && previous.finished_at === current.finished_at) {
+  if (previous.total_score === current.total_score) {
     return getFinalRank(leaderboard, index - 1);
   }
 
@@ -89,31 +82,16 @@ function getFinalRank(leaderboard: FinalLeaderboardPlayer[], index: number) {
 
 const categoryOrder: AwardCategoryOrFinal[] = ['starters', 'sushi', 'sashimi', 'temaki', 'hot_dishes', 'final_winner'];
 
-function normalizeCategoryAward(award: RoomAward, playersById: Map<string, AwardPlayer>): RoomAward {
+function normalizeCategoryAward(award: RoomAward): RoomAward {
   if (award.is_final_winner || !Array.isArray(award.leaderboard_json)) {
     return award;
   }
 
   const hasWinner = award.leaderboard_json.some((player: AwardLeaderboardPlayer) => player.score > 0);
   const leaderboard = award.leaderboard_json
-    .map((player: AwardLeaderboardPlayer) => ({
-      ...player,
-      finished_at: player.finished_at ?? playersById.get(player.player_id)?.finished_at ?? null,
-    }))
     .sort((a: AwardLeaderboardPlayer, b: AwardLeaderboardPlayer) => {
       if (b.score !== a.score) {
         return b.score - a.score;
-      }
-
-      const finishedAtA = a.finished_at ?? -1;
-      const finishedAtB = b.finished_at ?? -1;
-
-      if (!hasWinner) {
-        return a.player_name.localeCompare(b.player_name);
-      }
-
-      if (finishedAtB !== finishedAtA) {
-        return finishedAtB - finishedAtA;
       }
 
       return a.player_name.localeCompare(b.player_name);
@@ -139,26 +117,15 @@ function normalizeCategoryAward(award: RoomAward, playersById: Map<string, Award
   };
 }
 
-function normalizeFinalAward(award: RoomAward, playersById: Map<string, AwardPlayer>): RoomAward {
+function normalizeFinalAward(award: RoomAward): RoomAward {
   if (!award.is_final_winner || !Array.isArray(award.leaderboard_json)) {
     return award;
   }
 
   const leaderboard = award.leaderboard_json
-    .map((player: FinalLeaderboardPlayer) => ({
-      ...player,
-      finished_at: player.finished_at ?? playersById.get(player.player_id)?.finished_at ?? null,
-    }))
     .sort((a: FinalLeaderboardPlayer, b: FinalLeaderboardPlayer) => {
       if (b.total_score !== a.total_score) {
         return b.total_score - a.total_score;
-      }
-
-      const finishedAtA = a.finished_at ?? -1;
-      const finishedAtB = b.finished_at ?? -1;
-
-      if (finishedAtB !== finishedAtA) {
-        return finishedAtB - finishedAtA;
       }
 
       return a.player_name.localeCompare(b.player_name);
@@ -182,8 +149,8 @@ function normalizeFinalAward(award: RoomAward, playersById: Map<string, AwardPla
   };
 }
 
-function normalizeAward(award: RoomAward, playersById: Map<string, AwardPlayer>) {
-  return award.is_final_winner ? normalizeFinalAward(award, playersById) : normalizeCategoryAward(award, playersById);
+function normalizeAward(award: RoomAward) {
+  return award.is_final_winner ? normalizeFinalAward(award) : normalizeCategoryAward(award);
 }
 
 function formatTranslation(template: string, values: Record<string, string>) {
@@ -256,17 +223,12 @@ export default function AwardsPage() {
       return;
     }
 
-    const [{ data }, { data: players }] = await Promise.all([
-      supabase.from('room_awards').select('*').eq('room_id', room.id).order('created_at'),
-      supabase.from('players').select('id, finished_at').eq('room_id', room.id),
-    ]);
+    const { data } = await supabase.from('room_awards').select('*').eq('room_id', room.id).order('created_at');
 
     if (!data) {
       setIsLoading(false);
       return;
     }
-
-    const playersById = new Map<string, AwardPlayer>((players || []).map((player) => [player.id, player]));
 
     const roomAwards = data as RoomAward[];
 
@@ -274,7 +236,7 @@ export default function AwardsPage() {
       return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
     });
 
-    setAwards(roomAwards.map((award) => normalizeAward(award, playersById)));
+    setAwards(roomAwards.map((award) => normalizeAward(award)));
     setIsLoading(false);
   }
 
@@ -365,7 +327,7 @@ export default function AwardsPage() {
   }
 
   return (
-    <main className="flex min-h-[100dvh] flex-col bg-[#FAF7F2] px-6 py-8">
+    <main className="flex min-h-[100dvh] flex-col overflow-x-hidden bg-[#FAF7F2] px-6 py-8">
       <div key={award.category} onClick={nextSlide} className="award-slide-shell flex flex-1 flex-col">
         {!award.is_final_winner ? (
           <AwardSlide

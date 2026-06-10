@@ -6,6 +6,8 @@ Create a room, invite your friends, track what everyone eats, and discover who b
 
 🌍 Available in **English, Portuguese and French**
 
+Current version: **v1.1.0**
+
 ---
 
 # 🚀 Play Now
@@ -49,9 +51,11 @@ No one escapes the sushi battlefield 🍣
 The admin can fully customize the game.
 
 ### ⏱ Game Duration
+
 Choose how long the battle lasts.
 
 ### 🍱 Categories
+
 Enable only the categories your group wants to play with:
 
 - **Starters** → tempura, spring rolls, sesame balls, crepes, etc.
@@ -69,18 +73,21 @@ At least one category must be enabled.
 Once the game starts:
 
 - A live countdown begins
-- Every player gets real-time counters
+- Every player gets compact category counters
 - Count what you eat during the meal
+- Tap the category info icons whenever the menu gets confusing
 
 Each category has its own counter.
 
-Track your progress live and try not to explode 🍣
+Scores are saved locally and synced during the game, protecting progress from accidental refreshes or temporary connection problems.
 
-If you’re defeated by sushi...
+The timer follows the real match end time, even after locking and reopening the phone.
 
-> You can finish early 😭
+Finished eating before the timer ends?
 
-(Your friends may never forget it.)
+> You can finish early and keep your score.
+
+You will join the waiting room while the others finish.
 
 ---
 
@@ -90,7 +97,6 @@ When players finish eating:
 
 - They move to the waiting room
 - Remaining players are shown live
-- Survival time is tracked
 - Everyone waits for the final results together
 
 The tension grows...
@@ -120,17 +126,15 @@ Every sushi counts.
 
 If players tie in a category:
 
-- The player who finished later wins
-- If the score and finish time are the same, the award is shared
+- Players with the same score share the position and award
 - If everyone has **0** in a category, nobody wins it. The sushi survives.
 
 For the final winner:
 
-- Total score comes first
-- If there is a tie, the player who lasted longer wins
-- If total score and time are both tied, the crown is shared
+- Total score decides the winner
+- Players with the same total score share the crown
 
-Only one player becomes the true Sushi League champion 👑
+The highest score becomes the Sushi League champion. Tied scores share the crown 👑
 
 ---
 
@@ -138,7 +142,7 @@ Only one player becomes the true Sushi League champion 👑
 
 After the awards finish, players can export the full match summary:
 
-- Final winner and survival time
+- Final winner
 - Category winners
 - Full leaderboards for every category
 - Date played, active categories, and all player names
@@ -160,19 +164,21 @@ Perfect for receipts, group chats, and legally binding sushi bragging rights.
 - 📱 Mobile-first responsive design
 - 🌍 Multi-language support
 - ⚡ Live score tracking
+- 💾 Local score recovery after refreshes or connection problems
+- ℹ️ In-game category guides
 - 📷 QR room joining
 - 🎭 Funny game flow and social interactions
 - 💬 In-app feedback/support system
-- ⏳ Live timers and survival tracking
+- ⏳ Phone-lock-safe live game timer
 - 🎉 Winner glow, confetti and premium final champion reveal
 - 📤 Export results to clipboard, share sheet or PDF
-- ⚖️ Fair tie-breaking using finish time
+- ⚖️ Shared awards for tied scores
 
 ---
 
 # 🛠 Tech Stack
 
-- **Next.js 15**
+- **Next.js 16**
 - **React**
 - **TypeScript**
 - **TailwindCSS**

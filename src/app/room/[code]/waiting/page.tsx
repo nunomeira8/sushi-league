@@ -164,20 +164,14 @@ export default function WaitingPage() {
                 {!allPlayersFinished ? (
                   <div
                     className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                      player.finished ? 'border-red-500 text-red-500' : 'border-green-500 text-green-500'
+                      player.finished ? 'border-[#FF7F5C] text-[#FF7F5C]' : 'border-green-500 text-green-500'
                     }`}
                   >
                     {player.finished ? t.finishedEating : t.stillEating}
                   </div>
                 ) : (
                   <div className="rounded-full border border-[#FF7F5C] px-3 py-1 text-xs font-semibold text-[#FF7F5C]">
-                    {(player.finished_at || 0) / 60 >= room.game_duration ? (
-                      t.survivedEntireTime
-                    ) : (
-                      <>
-                        {t.survivedFor} {Math.floor((player.finished_at || 0) / 60)}m {(player.finished_at || 0) % 60}s
-                      </>
-                    )}
+                    {t.finishedEating}
                   </div>
                 )}
               </div>
