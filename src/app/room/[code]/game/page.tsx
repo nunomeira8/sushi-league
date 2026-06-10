@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useParams } from 'next/navigation';
 
@@ -13,6 +13,7 @@ import { Room } from '@/types/room';
 import { useRouter } from 'next/navigation';
 
 import { getPlayerId } from '@/lib/storage';
+import { hasVisitedGame, markGameAsVisited } from '@/lib/gameVisitStorage';
 
 import { GiveUpModal } from '@/components/game/GiveUpModal';
 import { CategoryCounter } from '@/components/game/CategoryCounter';
@@ -35,15 +36,24 @@ export default function GamePage() {
 
   const [showIntro, setShowIntro] = useState(true);
 
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+
+  const [hasWelcomeBackSlot, setHasWelcomeBackSlot] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState(0);
 
   const router = useRouter();
 
   const [isGiveUpOpen, setIsGiveUpOpen] = useState(false);
 
+  const [openCategoryTooltip, setOpenCategoryTooltip] = useState<Category | null>(null);
+
   const { scores, changeScore, flushScores } = useBufferedScores(code);
 
   const [isFinishing, setIsFinishing] = useState(false);
+
+  const isFinishingRef = useRef(false);
+  const isReturningPlayerRef = useRef<boolean | null>(null);
 
   const categoryLabels: Record<Category, string> = {
     starters: t.starters,
@@ -53,6 +63,14 @@ export default function GamePage() {
     hot_dishes: t.hot_dishes,
   };
 
+  const categoryDescriptions: Record<Category, string> = {
+    starters: t.startersDescription,
+    sushi: t.sushiDescription,
+    sashimi: t.sashimiDescription,
+    temaki: t.temakiDescription,
+    hot_dishes: t.hot_dishesDescription,
+  };
+
   const fetchRoom = useCallback(async () => {
     const { data } = await supabase.from('rooms').select('*').eq('code', code.toUpperCase()).single();
 
@@ -60,105 +78,149 @@ export default function GamePage() {
 
     setRoom(data);
 
-    const now = new Date();
+    const endTime = data.ended_at ? new Date(data.ended_at).getTime() : null;
 
-    const end = new Date(data.ended_at);
-
-    const secondsLeft = Math.max(0, Math.floor((end.getTime() - now.getTime()) / 1000));
-
-    setTimeLeft(secondsLeft);
+    if (endTime) {
+      setTimeLeft(Math.max(0, Math.ceil((endTime - Date.now()) / 1000)));
+    }
   }, [code]);
 
   const finishGame = useCallback(async () => {
-    if (!room || !room.started_at) return;
+    if (!room || !room.started_at || isFinishingRef.current) return;
 
     const playerId = getPlayerId();
 
-    const startedAtValue = room.started_at;
-    const startedAt = new Date(startedAtValue).getTime();
-
-    const now = Date.now();
-
-    const elapsedSeconds = Math.floor((now - startedAt) / 1000);
+    isFinishingRef.current = true;
 
     const scoresSaved = await flushScores();
 
-    if (!scoresSaved) return;
+    if (!scoresSaved) {
+      isFinishingRef.current = false;
+      return;
+    }
 
     const { error } = await supabase
       .from('players')
       .update({
         finished: true,
-
-        finished_at: elapsedSeconds,
+        finished_at: room.game_duration * 60,
       })
       .eq('id', playerId);
 
-    console.log('FINISH ERROR', error);
+    if (error) {
+      console.error('FINISH ERROR', error);
+      isFinishingRef.current = false;
+      return;
+    }
 
     router.push(`/room/${room.code}/waiting`);
   }, [flushScores, room, router]);
 
   useEffect(() => {
+    const playerId = getPlayerId();
+
+    if (isReturningPlayerRef.current === null) {
+      isReturningPlayerRef.current = playerId ? hasVisitedGame(code, playerId) : false;
+    }
+
+    const isReturningPlayer = isReturningPlayerRef.current;
+
+    if (playerId) {
+      markGameAsVisited(code, playerId);
+    }
+
     const roomTimeout = setTimeout(() => {
+      if (isReturningPlayer) {
+        setShowIntro(false);
+        setShowWelcomeBack(true);
+        setHasWelcomeBackSlot(true);
+      }
+
       void fetchRoom();
     }, 0);
 
-    const introTimeout = setTimeout(() => {
-      setShowIntro(false);
-    }, 5000);
+    const introTimeout = isReturningPlayer
+      ? null
+      : setTimeout(() => {
+          setShowIntro(false);
+        }, 5000);
+
+    const welcomeBackTimeout = isReturningPlayer
+      ? setTimeout(() => {
+          setShowWelcomeBack(false);
+        }, 3000)
+      : null;
 
     return () => {
       clearTimeout(roomTimeout);
-      clearTimeout(introTimeout);
+
+      if (introTimeout) clearTimeout(introTimeout);
+      if (welcomeBackTimeout) clearTimeout(welcomeBackTimeout);
     };
-  }, [fetchRoom]);
+  }, [code, fetchRoom]);
 
   useEffect(() => {
-    if (showIntro) return;
+    if (!room?.ended_at) return;
 
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
+    const endTime = new Date(room.ended_at).getTime();
 
-          finishGame();
+    function updateTimer() {
+      const nextTimeLeft = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
 
-          return 0;
-        }
+      setTimeLeft(nextTimeLeft);
 
-        return prev - 1;
-      });
-    }, 1000);
+      if (nextTimeLeft === 0) {
+        void finishGame();
+      }
+    }
 
-    return () => clearInterval(interval);
-  }, [finishGame, showIntro]);
+    updateTimer();
+
+    const interval = setInterval(updateTimer, 1000);
+
+    function updateTimerWhenVisible() {
+      if (document.visibilityState === 'visible') {
+        updateTimer();
+      }
+    }
+
+    document.addEventListener('visibilitychange', updateTimerWhenVisible);
+    window.addEventListener('focus', updateTimer);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', updateTimerWhenVisible);
+      window.removeEventListener('focus', updateTimer);
+    };
+  }, [finishGame, room?.ended_at]);
 
   if (!room) {
     return null;
   }
 
   async function giveUp() {
-    if (isFinishing) return;
+    const activeRoom = room;
 
+    if (isFinishing || isFinishingRef.current || !activeRoom?.started_at) return;
+
+    isFinishingRef.current = true;
     setIsFinishing(true);
+    let completed = false;
 
     try {
       const playerId = getPlayerId();
 
-      if (!room?.started_at) return;
-
-      const startedAt = new Date(room.started_at).getTime();
+      const startedAt = new Date(activeRoom.started_at).getTime();
 
       const now = Date.now();
 
-      const elapsedSeconds = Math.floor((now - startedAt) / 1000);
+      const elapsedSeconds = Math.min(Math.floor((now - startedAt) / 1000), activeRoom.game_duration * 60);
 
       const scoresSaved = await flushScores();
 
       if (!scoresSaved) return;
 
-      await supabase
+      const { error } = await supabase
         .from('players')
         .update({
           finished: true,
@@ -166,8 +228,18 @@ export default function GamePage() {
         })
         .eq('id', playerId);
 
+      if (error) {
+        console.error('FINISH ERROR', error);
+        return;
+      }
+
+      completed = true;
       router.push(`/room/${code}/waiting`);
     } finally {
+      if (!completed) {
+        isFinishingRef.current = false;
+      }
+
       setIsFinishing(false);
     }
   }
@@ -217,14 +289,44 @@ export default function GamePage() {
             </h1>
           </div>
 
-          <div className="mt-10 flex flex-1 flex-col gap-4 overflow-y-auto pb-6">
+          {hasWelcomeBackSlot && (
+            <div
+              className={`grid w-full transition-all duration-500 ${
+                showWelcomeBack ? 'mt-5 grid-rows-[1fr]' : 'mt-0 grid-rows-[0fr]'
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div
+                  aria-live="polite"
+                  className={`mx-auto w-full max-w-sm rounded-lg border px-4 py-3 text-center text-sm font-semibold transition-all duration-500 ${
+                    showWelcomeBack
+                      ? 'translate-y-0 border-[#FFD8CC] bg-white text-[#3A322E] opacity-100 shadow-sm'
+                      : 'pointer-events-none -translate-y-1 border-transparent text-transparent opacity-0'
+                  }`}
+                >
+                  {t.welcomeBackGame}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div
+            className={`${
+              showWelcomeBack ? 'mt-5' : 'mt-10'
+            } flex flex-1 flex-col gap-3 overflow-y-auto pb-5 transition-[margin] duration-500`}
+          >
             {enabledCategories.map((category) => (
               <CategoryCounter
                 key={category}
                 name={categoryLabels[category]}
                 value={scores[category] || 0}
+                description={categoryDescriptions[category]}
+                isTooltipOpen={openCategoryTooltip === category}
                 onIncrease={() => changeScore(category, 1)}
                 onDecrease={() => changeScore(category, -1)}
+                onToggleTooltip={() =>
+                  setOpenCategoryTooltip((currentCategory) => (currentCategory === category ? null : category))
+                }
               />
             ))}
           </div>

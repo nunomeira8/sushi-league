@@ -1,47 +1,74 @@
 'use client';
 
-import { Minus, Plus } from 'lucide-react';
+import { Info, Minus, Plus } from 'lucide-react';
 
 type Props = {
   name: string;
 
   value: number;
 
+  description: string;
+
+  isTooltipOpen: boolean;
+
   onIncrease: () => void;
 
   onDecrease: () => void;
+
+  onToggleTooltip: () => void;
 };
 
-export function CategoryCounter({ name, value, onIncrease, onDecrease }: Props) {
+export function CategoryCounter({
+  name,
+  value,
+  description,
+  isTooltipOpen,
+  onIncrease,
+  onDecrease,
+  onToggleTooltip,
+}: Props) {
   return (
-    <div className="rounded-[28px] bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+    <div className="relative rounded-lg bg-white p-4 shadow-[0_3px_14px_rgba(0,0,0,0.06)]">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-400">Category</p>
-
-          <h2 className="text-2xl font-bold text-[#222222]">{name}</h2>
+        <div className="flex min-w-0 items-center gap-2">
+          <h2 className="truncate text-xl font-bold text-[#222222]">{name}</h2>
+          <button
+            type="button"
+            onClick={onToggleTooltip}
+            aria-label={`${name}: ${description}`}
+            aria-expanded={isTooltipOpen}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 transition hover:bg-[#FAF7F2] hover:text-[#FF7F5C] active:scale-95"
+          >
+            <Info size={17} strokeWidth={2.25} aria-hidden="true" />
+          </button>
         </div>
-
-        <div className="text-right">
-          <p className="text-sm text-gray-400">Pieces</p>
-
-          <p className="text-5xl font-bold text-[#FF7F5C]">{value}</p>
-        </div>
+        <p className="min-w-14 text-right text-4xl leading-none font-bold text-[#FF7F5C]">{value}</p>
       </div>
 
-      <div className="mt-5 flex items-center gap-3">
+      {isTooltipOpen && (
+        <div
+          role="tooltip"
+          className="absolute top-13 right-4 left-4 z-10 rounded-lg border border-[#FFD8CC] bg-[#FFF9F6] px-3 py-2.5 text-sm leading-relaxed text-[#5F554F] shadow-lg"
+        >
+          {description}
+        </div>
+      )}
+
+      <div className="mt-4 grid grid-cols-[52px_1fr] gap-3">
         <button
           onClick={onDecrease}
-          className="flex h-14 flex-1 items-center justify-center rounded-2xl bg-[#FAF7F2] active:scale-95"
+          aria-label={`Decrease ${name}`}
+          className="flex h-12 items-center justify-center rounded-lg bg-[#FAF7F2] text-[#FF7F5C] transition active:scale-95"
         >
-          <Minus size={26} className="text-[#FF7F5C]" />
+          <Minus size={23} strokeWidth={2.5} aria-hidden="true" />
         </button>
 
         <button
           onClick={onIncrease}
-          className="flex h-14 flex-1 items-center justify-center rounded-2xl bg-[#FF7F5C] active:scale-95"
+          aria-label={`Increase ${name}`}
+          className="flex h-12 items-center justify-center rounded-lg bg-[#FF7F5C] text-white shadow-sm transition active:scale-[0.98]"
         >
-          <Plus size={26} className="text-white" />
+          <Plus size={25} strokeWidth={2.5} aria-hidden="true" />
         </button>
       </div>
     </div>
